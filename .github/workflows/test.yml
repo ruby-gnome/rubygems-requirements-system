@@ -1,0 +1,93 @@
+# Copyright (C) 2025  Ruby-GNOME Project Team
+#
+# This library is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+name: Test
+on:
+  - push
+  - pull_request
+jobs:
+  docker:
+    name: ${{ matrix.distribution }}
+    strategy:
+      fail-fast: false
+      matrix:
+        distribution:
+          - almalinux-9
+          - alpine-linux
+          - alt-linux
+          - amazon-linux-2
+          - amazon-linux-2023
+          - arch-linux
+          - conda
+          - debian-bookworm
+          - fedora
+          - gentoo-linux
+          - opensuse
+          - pld-linux
+          - ubuntu-20.04
+          - ubuntu-22.04
+          - ubuntu-24.04
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare cache for Gentoo Linux
+        if: |
+          matrix.distribution == 'gentoo-linux'
+        run: |
+          docker pull gentoo/portage
+          gentoo_portage_id=$(docker image inspect gentoo/portage | jq -r ".[0].Id")
+          echo "GENTOO_PORTAGE_ID=${gentoo_portage_id}" >> "${GITHUB_ENV}"
+      - name: Cache binary packages for Gentoo Linux
+        if: |
+          matrix.distribution == 'gentoo-linux'
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: ${{ matrix.distribution }}-${{ env.GENTOO_PORTAGE_ID }}
+          restore-keys: ${{ matrix.distribution }}-
+      - name: Build Docker image
+        run: |
+          docker compose build ${{ matrix.distribution }}
+      - name: Run
+        run: |
+          docker compose run --rm ${{ matrix.distribution }}
+  native:
+    name: ${{ matrix.ruby-version }} on ${{ matrix.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on:
+          - macos
+          - ubuntu
+        ruby-version:
+          - "3.4"
+          - "3.3"
+          - "3.2"
+          - "3.1"
+    runs-on: ${{ matrix.runs-on }}-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+      - name: Install
+        run: bundle exec rake install
+      - name: Install glib2 gem
+        run: |
+          MAKEFLAGS="-j$(ruby -r etc -e 'puts Etc.nprocessors')" \
+            gem install glib2

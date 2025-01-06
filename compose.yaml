@@ -1,0 +1,172 @@
+# Copyright (C) 2025  Ruby-GNOME Project Team
+#
+# This library is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+services:
+  almalinux-9:
+    build:
+      context: .
+      dockerfile: dockerfiles/almalinux.dockerfile
+      args:
+        VERSION: "9"
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  alpine-linux:
+    build:
+      context: .
+      dockerfile: dockerfiles/alpine-linux.dockerfile
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  alt-linux:
+    build:
+      context: .
+      dockerfile: dockerfiles/alt-linux.dockerfile
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  amazon-linux-2:
+    build:
+      context: .
+      dockerfile: dockerfiles/amazon-linux-2.dockerfile
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  amazon-linux-2023:
+    build:
+      context: .
+      dockerfile: dockerfiles/amazon-linux-2023.dockerfile
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  arch-linux:
+    build:
+      context: .
+      dockerfile: dockerfiles/arch-linux.dockerfile
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  conda:
+    build:
+      context: .
+      dockerfile: dockerfiles/conda.dockerfile
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  debian-bookworm:
+    build:
+      context: .
+      dockerfile: dockerfiles/debian.dockerfile
+      args:
+        CODE_NAME: "bookworm"
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  fedora:
+    build:
+      context: .
+      dockerfile: dockerfiles/fedora.dockerfile
+      args:
+        VERSION: "latest"
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  gentoo-linux-portage:
+    image: gentoo/portage
+    command:
+      /bin/true
+
+  gentoo-linux:
+    build:
+      context: .
+      dockerfile: dockerfiles/gentoo-linux.dockerfile
+    volumes:
+      - .:/host:delegated
+      - .cache/gentoo-linux/binpkgs:/var/cache/binpkgs:delegated
+    volumes_from:
+      - gentoo-linux-portage
+    command:
+      /host/dockerfiles/run-test-gentoo-linux.sh
+
+  opensuse:
+    build:
+      context: .
+      dockerfile: dockerfiles/opensuse.dockerfile
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  pld-linux:
+    build:
+      context: .
+      dockerfile: dockerfiles/pld-linux.dockerfile
+    volumes:
+      - .:/host:delegated
+    security_opt:
+      - seccomp:unconfined
+    command:
+      /host/dockerfiles/run-test.sh
+
+  ubuntu-20.04:
+    build:
+      context: .
+      dockerfile: dockerfiles/ubuntu.dockerfile
+      args:
+        VERSION: "20.04"
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  ubuntu-22.04:
+    build:
+      context: .
+      dockerfile: dockerfiles/ubuntu.dockerfile
+      args:
+        VERSION: "22.04"
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
+
+  ubuntu-24.04:
+    build:
+      context: .
+      dockerfile: dockerfiles/ubuntu.dockerfile
+      args:
+        VERSION: "24.04"
+    volumes:
+      - .:/host:delegated
+    command:
+      /host/dockerfiles/run-test.sh
