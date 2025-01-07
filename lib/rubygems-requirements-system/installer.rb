@@ -72,6 +72,7 @@ module RubyGemsRequirementsSystem
 
     private
     def parse_requirements(gemspec_requirements)
+      all_packages_set = {}
       requirements = {}
       gemspec_requirements.each do |gemspec_requirement|
         components = gemspec_requirement.split(/: +/, 4)
@@ -83,9 +84,16 @@ module RubyGemsRequirementsSystem
         packages = parse_packages(raw_packages)
         next if packages.empty?
 
+        all_packages_set[packages] = true
+
         next unless @platform.target?(platform)
         requirements[packages] ||= []
         requirements[packages] << system_package
+      end
+      (all_packages_set.keys - requirements.keys).each do |not_used_packages|
+        system_packages = @platform.default_system_packages(not_used_packages)
+        next if system_packages.nil?
+        requirements[not_used_packages] = system_packages
       end
       requirements.collect do |packages, system_packages|
         Requirement.new(packages, system_packages)

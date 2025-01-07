@@ -27,9 +27,13 @@ module RubyGemsRequirementsSystem
         raise NotImpelementedError
       end
 
+      def default_system_packages(packages)
+        nil
+      end
+
       def install(requirement)
         synchronize do
-          target_packages(requirement).any? do |package|
+          requirement.system_packages.any? do |package|
             install_package(package) and requirement.satisfied?
           end
         end
@@ -73,10 +77,6 @@ module RubyGemsRequirementsSystem
       def have_priviledge?
         return true unless need_super_user_priviledge?
         super_user?
-      end
-
-      def target_packages(requirement)
-        requirement.system_packages
       end
 
       def install_package(package)

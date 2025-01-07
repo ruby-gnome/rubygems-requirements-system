@@ -38,11 +38,11 @@ module RubyGemsRequirementsSystem
         end
       end
 
-      private
-      def target_packages(requirement)
-        super +
-          requirement.packages.collect {|package| "pkgconfig(#{package.id})"}
+      def default_system_packages(packages)
+        packages.collect {|package| "pkgconfig(#{package.id})"}
       end
+
+      private
 
       def install_command_line(package)
         if major_version >= 9
