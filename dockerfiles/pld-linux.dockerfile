@@ -26,12 +26,14 @@ RUN \
     sudo \
     which
 
-RUN \
-  adduser -S devel
+# sudo doesn't work in Docker container.
 
-RUN \
-  echo "devel ALL=(ALL:ALL) NOPASSWD:ALL" | \
-    EDITOR=tee visudo -f /etc/sudoers.d/devel
+# RUN \
+#   adduser -S devel
 
-USER devel
-WORKDIR /home/devel
+# RUN \
+#   echo "devel ALL=(ALL:ALL) NOPASSWD:ALL" | \
+#     EDITOR=tee visudo -f /etc/sudoers.d/devel
+
+# USER devel
+# WORKDIR /home/devel
