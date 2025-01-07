@@ -118,7 +118,7 @@ module RubyGemsRequirementsSystem
           alert_warning("'#{package}' system package is required.")
           alert_warning("Run the following command " +
                         "to #{action} required system package: " +
-                        escaped_install_command.join(" "))
+                        escaped_command.join(" "))
         end
         succeeded
       end
