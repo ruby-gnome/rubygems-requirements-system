@@ -21,7 +21,13 @@ rm -rf build
 cp -r /host build
 cd build
 
-if sudo which rake; then
+if gem env | grep -q -- --user-install; then
+  # Arch Linux
+  rake install
+elif gem env | grep -q -- --install-dir; then
+  # Gentoo Linux
+  rake install
+elif sudo which rake; then
   sudo rake install
 else
   rake install
