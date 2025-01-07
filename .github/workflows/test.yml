@@ -84,9 +84,8 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true
       - name: Install
-        run: bundle exec rake install
+        run: rake install
       - name: Install dummy-cairo gem
         run: |
           cd test/fixture/dummy-cairo
