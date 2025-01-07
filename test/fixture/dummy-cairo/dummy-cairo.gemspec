@@ -50,4 +50,5 @@ Gem::Specification.new do |spec|
   spec.requirements << "system: cairo >= 1.2.0: gentoo_linux: x11-libs/cairo"
   spec.requirements << "system: cairo >= 1.2.0: homebrew: cairo"
   spec.requirements << "system: cairo >= 1.2.0: macports: cairo"
+  spec.requirements << "system: cairo >= 1.2.0: pld_linux: cairo-devel"
 end
