@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.version = "1.0.0"
   spec.authors = ["Sutou Kouhei"]
   spec.email = ["kou@cozmixng.org"]
-  spec.licenses = ["LGPL-3.0+"]
+  spec.licenses = ["LGPL-3.0-or-later"]
   spec.summary = "Dummy gem that uses cairo"
   spec.description = "This is for testing rubygems-requirements-system"
   spec.extensions = ["ext/dummy-cairo/extconf.rb"]

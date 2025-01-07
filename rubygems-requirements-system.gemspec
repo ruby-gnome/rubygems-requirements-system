@@ -31,7 +31,7 @@ Users can install both system packages and an extension library by one action,
 "gem install".
   DESCRIPTION
   spec.homepage = "https://github.com/ruby-gnome/rubygems-requirements-system"
-  spec.licenses = ["LGPL-3.0+"]
+  spec.licenses = ["LGPL-3.0-or-later"]
   spec.require_paths = ["lib"]
 
   spec.files = ["README.md", "Rakefile"]
