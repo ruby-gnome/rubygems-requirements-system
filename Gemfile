@@ -21,5 +21,3 @@ gemspec
 
 gem "bundler"
 gem "rake"
-
-gem "cairo", path: File.join(__dir__, "rcairo")
