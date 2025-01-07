@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
   spec.requirements << "system: cairo >= 1.2.0: alt_linux: libbrotli-devel"
   spec.requirements << "system: cairo >= 1.2.0: alt_linux: libcairo-devel"
   spec.requirements << "system: cairo >= 1.2.0: alt_linux: libexpat-devel"
+  spec.requirements << "system: cairo >= 1.2.0: alt_linux: libffi-devel"
   spec.requirements << "system: cairo >= 1.2.0: alt_linux: libpixman-devel"
   spec.requirements << "system: cairo >= 1.2.0: arch_linux: cairo"
   spec.requirements << "system: cairo >= 1.2.0: conda: cairo"
