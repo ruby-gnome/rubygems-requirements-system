@@ -52,4 +52,5 @@ Gem::Specification.new do |spec|
   spec.requirements << "system: cairo >= 1.2.0: homebrew: cairo"
   spec.requirements << "system: cairo >= 1.2.0: macports: cairo"
   spec.requirements << "system: cairo >= 1.2.0: pld_linux: cairo-devel"
+  spec.requirements << "system: cairo >= 1.2.0: suse: cairo-devel"
 end
