@@ -29,4 +29,10 @@ fi
 
 cd test/fixture/dummy-cairo
 gem build *.gemspec
-gem install --user-install ./*.gem "$@"
+# Gentoo Linux uses --install-dir by default. It's conflicted with
+# --user-install.
+if gem env | grep -q -- --install-dir; then
+  gem install ./*.gem "$@"
+else
+  gem install --user-install ./*.gem "$@"
+fi

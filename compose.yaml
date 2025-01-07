@@ -112,11 +112,10 @@ services:
       dockerfile: dockerfiles/gentoo-linux.dockerfile
     volumes:
       - .:/host:delegated
-      - .cache/gentoo-linux/binpkgs:/var/cache/binpkgs:delegated
     volumes_from:
       - gentoo-linux-portage
     command:
-      /host/dockerfiles/run-test-gentoo-linux.sh
+      /host/dockerfiles/run-test.sh
 
   opensuse:
     build:

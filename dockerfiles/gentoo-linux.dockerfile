@@ -13,21 +13,25 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+FROM gentoo/portage as portage
+
 FROM gentoo/stage3
 
+COPY --from=portage /var/db/repos/gentoo /var/db/repos/gentoo
+
 RUN \
-  ( \
-    echo "BINPKG_FORMAT=\"gpkg\""; \
-    echo "FEATURES=\"buildpkg\""; \
-    echo "MAKEOPTS=\"-j$(($(nproc) +1))\""; \
-  ) >> /etc/portage/make.conf
+  emerge \
+    --usepkg \
+    app-admin/sudo \
+    dev-lang/ruby
 
 RUN \
   useradd --user-group --create-home devel
 
-# RUN \
-#   echo "devel ALL=(ALL:ALL) NOPASSWD:ALL" | \
-#     EDITOR=tee visudo -f /etc/sudoers.d/devel
+RUN \
+  mkdir -p /etc/sudoers.d && \
+  echo "devel ALL=(ALL:ALL) NOPASSWD:ALL" | \
+    EDITOR=tee visudo -f /etc/sudoers.d/devel
 
-# USER devel
-# WORKDIR /home/devel
+USER devel
+WORKDIR /home/devel
