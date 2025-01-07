@@ -21,6 +21,7 @@ RUN \
     make \
     ruby \
     ruby-bundler \
+    ruby-devel \
     ruby-rake \
     sudo \
     which
