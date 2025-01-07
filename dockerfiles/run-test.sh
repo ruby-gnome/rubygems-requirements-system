@@ -21,6 +21,11 @@ rm -rf build
 cp -r /host build
 cd build
 
+if ruby --help | grep gems | grep -q 'default: disabled'; then
+  # PLD Linux
+  export RUBYOPT="--enable=gems"
+fi
+
 if gem env | grep -q -- --user-install; then
   # Arch Linux
   rake install
