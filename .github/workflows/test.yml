@@ -87,7 +87,8 @@ jobs:
           bundler-cache: true
       - name: Install
         run: bundle exec rake install
-      - name: Install glib2 gem
+      - name: Install dummy-cairo gem
         run: |
-          MAKEFLAGS="-j$(ruby -r etc -e 'puts Etc.nprocessors')" \
-            gem install glib2
+          cd test/fixture/dummy-cairo
+          gem build *.gemspec
+          gem install ./*.gem
