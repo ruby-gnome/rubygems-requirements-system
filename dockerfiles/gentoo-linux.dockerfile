@@ -20,7 +20,9 @@ FROM gentoo/stage3
 COPY --from=portage /var/db/repos/gentoo /var/db/repos/gentoo
 
 RUN \
+  getuto && \
   emerge \
+    --getbinpkg \
     --usepkg \
     app-admin/sudo \
     dev-lang/ruby
