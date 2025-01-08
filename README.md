@@ -136,6 +136,6 @@ other word than "native". So we create a new gem.
 
 ## License
 
-Copyright (C) 2013-2025  Ruby-GNOME Project Team
+Copyright (C) 2025  Ruby-GNOME Project Team
 
 LGPL-3 or later. See doc/text/lgpl-3.txt for details.
