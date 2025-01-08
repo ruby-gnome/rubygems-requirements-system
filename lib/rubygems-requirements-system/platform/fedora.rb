@@ -51,13 +51,13 @@ module RubyGemsRequirementsSystem
         os_release = OSRelease.new
         package_url_template % {
           distribution: os_release.id,
-          major_version: major_version,
+          major_version: major_version.to_s,
           version: os_release.version_id,
         }
       end
 
       def major_version
-        major_version_string = File.read("/etc/redhat-release")[/(\d+)/, 0]
+        major_version_string = OSRelease.new.version_id.split(".")[0]
         Integer(major_version_string, 10)
       end
     end
