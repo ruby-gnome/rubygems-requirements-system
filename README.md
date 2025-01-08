@@ -89,8 +89,15 @@ Gem::Specification.new do |spec|
   # ...
 
   # We need mysqliclient or libmariadb for this gem.
-  spec.requirements << "system: mysqlclient|libmariadb: arch_linux: mariadb-libs"
-  spec.requirements << "system: mysqlclient|libmariadb: debian: libmysqlclient-dev"
+
+  # Try libmysqlclient-dev and then libmariadb-dev on Ubuntu. Because
+  # "debian: libmariadb-dev" is also used on Ubuntu.
+  #
+  # mysqlclient or libmariadb will be satsfied by a system package.
+  spec.requirements << "system: mysqlclient|libmariadb: ubuntu: libmysqlclient-dev"
+  # Try only libmariadb-dev on Debian.
+  #
+  # libmariadb will be satsfied by a system package.
   spec.requirements << "system: mysqlclient|libmariadb: debian: libmariadb-dev"
 
   # ...
