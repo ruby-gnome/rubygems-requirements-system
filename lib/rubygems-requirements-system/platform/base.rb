@@ -25,10 +25,6 @@ module RubyGemsRequirementsSystem
     class Base
       include Gem::UserInteraction
 
-      def initialize
-        @temporary_files = []
-      end
-
       def target?(platform)
         raise NotImpelementedError
       end
@@ -85,13 +81,30 @@ module RubyGemsRequirementsSystem
         super_user?
       end
 
-      def install_package(package)
-        prepare_command_lines(package).each do |command_line|
-          unless run_command_line(package, "prepare", command_line)
-            return false
-          end
+      def temporary_file_scope
+        @temporary_files = []
+        begin
+          yield
+        ensure
+          @temporary_files.each(&:close!)
         end
-        run_command_line(package, "install", install_command_line(package))
+      end
+
+      def create_temporary_file(basename)
+        file = Tempfile.new(basename)
+        @temporary_files << file
+        file
+      end
+
+      def install_package(package)
+        temporary_file_scope do
+          prepare_command_lines(package).each do |command_line|
+            unless run_command_line(package, "prepare", command_line)
+              return false
+            end
+          end
+          run_command_line(package, "install", install_command_line(package))
+        end
       end
 
       def run_command_line(package, action, command_line)

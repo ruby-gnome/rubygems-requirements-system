@@ -52,10 +52,11 @@ module RubyGemsRequirementsSystem
       def install_command_line(package)
         if package.start_with?("https://")
           package_url = resolve_package_url_template(package)
-          local_package = Tempfile.new([
-                                         "rubygems-requirements-system-debian",
-                                         File.extname(package),
-                                       ])
+          temporary_file_base_name = [
+            "rubygems-requirements-system-debian",
+            File.extname(package),
+          ]
+          local_package = create_temporary_file(temporary_file_base_name)
           URI.open(package_url) do |response|
             IO.copy_stream(response, local_package)
           end
