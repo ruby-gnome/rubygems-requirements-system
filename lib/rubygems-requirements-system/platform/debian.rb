@@ -84,7 +84,7 @@ module RubyGemsRequirementsSystem
         package_url_template % {
           distribution: os_release.id,
           code_name: os_release.version_codename,
-          version: os_release.version,
+          version: os_release.version_id,
         }
       end
     end
