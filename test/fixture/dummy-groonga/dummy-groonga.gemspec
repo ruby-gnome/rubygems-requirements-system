@@ -29,5 +29,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency("rubygems-requirements-system")
 
   spec.requirements << "system: groonga: debian: https://packages.groonga.org/%{distribution}/groonga-apt-source-latest-%{code_name}.deb"
+  spec.requirements << "system: groonga: ubuntu: ppa:groonga/ppa"
   spec.requirements << "system: groonga: debian: libgroonga-dev"
 end

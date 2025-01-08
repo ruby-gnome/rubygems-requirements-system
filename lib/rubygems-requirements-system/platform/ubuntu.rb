@@ -36,6 +36,30 @@ module RubyGemsRequirementsSystem
       def target?(platform)
         platform == "ubuntu" || super
       end
+
+      private
+      def prepare_command_lines(package)
+        if package.start_with?("ppa:")
+          [
+            ["apt-get", "update"],
+            install_command_line("software-properties-common"),
+          ]
+        else
+          super
+        end
+      end
+
+      def install_command_line(package)
+        if package.start_with?("ppa:")
+          [
+            "add-apt-repository",
+            "-y",
+            package,
+          ]
+        else
+          super
+        end
+      end
     end
   end
 end

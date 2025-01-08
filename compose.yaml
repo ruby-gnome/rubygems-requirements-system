@@ -146,7 +146,7 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      /host/dockerfiles/run-test.sh
 
   ubuntu-22.04:
     build:
@@ -157,7 +157,7 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      /host/dockerfiles/run-test.sh
 
   ubuntu-24.04:
     build:
@@ -168,4 +168,4 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      /host/dockerfiles/run-test.sh
