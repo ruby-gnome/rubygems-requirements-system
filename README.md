@@ -52,6 +52,8 @@ Gem::Specification.new do |spec|
 end
 ```
 
+### Basic usage
+
 Add dependency information to `Gem::Specification#requirements`:
 
 ```ruby
@@ -77,6 +79,8 @@ Gem::Specification.new do |spec|
 end
 ```
 
+### OR dependency
+
 You can require dependency A or B. For example, you can require
 `mysqlclient` or `libmariadb`.
 
@@ -92,6 +96,8 @@ Gem::Specification.new do |spec|
   # ...
 end
 ```
+
+### Multiple packages per dependency
 
 You can install multiple packages for a dependency.
 
@@ -110,6 +116,85 @@ Gem::Specification.new do |spec|
   spec.requirements << "system: cairo: conda: xorg-xextproto"
   spec.requirements << "system: cairo: conda: xorg-xproto"
   spec.requirements << "system: cairo: conda: zlib"
+
+  # ...
+end
+```
+
+### Install packages via HTTPS
+
+You can install `.deb`/`.rpm` via HTTPS. If a product provides its
+APT/Yum repository configurations by `.deb`/`.rpm`, you can use this
+feature to register additional APT/Yum repositories.
+
+You can use placeholder for URL with `%{KEY}` format.
+
+Here are available placeholders:
+
+`debian` family platforms:
+
+* `distribution`: The `ID` value in `/etc/os-release`. It's `debian`,
+  `ubuntu` and so on.
+* `code_name`: The `VERSION_CODENAME` value in `/etc/os-release`. It's
+  `bookworm`, `noble` and so on.
+* `version`: The `VERSION_ID` value in `/etc/os-release`. It's `12`,
+  `24.04` and so on.
+
+`fedora` family platforms:
+
+* `distribution`: The `ID` value in `/etc/os-release`. It's `fedora`,
+  `rhel`, `almalinux` and so on.
+* `major_version`: The major part of `VERSION_ID` value in
+  `/etc/os-release`. It's `41`, `9` and so on.
+* `version`: The `VERSION_ID` value in `/etc/os-release`. It's `41`,
+  `9.5` and so on.
+
+Here is an example that uses this feature for adding new repositories:
+
+```ruby
+Gem::Specification.new do |spec|
+  # ...
+
+  # Install Groonga's APT repository for libgroonga-dev on Debian
+  # family platforms.
+  #
+  # %{distribution} and %{code_name} are placeholders.
+  #
+  # On Debian GNU/Linux bookworm:
+  #   https://packages.groonga.org/%{distribution}/groonga-apt-source-latest-%{code_name}.deb ->
+  #   https://packages.groonga.org/debian/groonga-apt-source-latest-bookworm.deb
+  #
+  # On Ubuntu 24.04:
+  #   https://packages.groonga.org/%{distribution}/groonga-apt-source-latest-%{code_name}.deb ->
+  #   https://packages.groonga.org/ubuntu/groonga-apt-source-latest-nobole.deb
+  spec.requirements << "system: groonga: debian: https://packages.groonga.org/%{distribution}/groonga-apt-source-latest-%{code_name}.deb"
+  # Install libgroonga-dev from the registered repository.
+  spec.requirements << "system: groonga: debian: libgroonga-dev"
+
+  # Install 2 repositories for pkgconfig(groonga) package on RHEL
+  # family plaforms:
+  # 1. Apache Arrow: https://apache.jfrog.io/artifactory/arrow/almalinux/%{major_version}/apache-arrow-release-latest.rpm
+  # 2. Groonga: https://packages.groonga.org/almalinux/%{major_version}/groonga-release-latest.noarch.rpm
+  #
+  # %{major_version} is placeholder.
+  #
+  # On AlmaLinux 8:
+  #   https://apache.jfrog.io/artifactory/arrow/almalinux/%{major_version}/apache-arrow-release-latest.rpm ->
+  #   https://apache.jfrog.io/artifactory/arrow/almalinux/8/apache-arrow-release-latest.rpm
+  #
+  #   https://packages.groonga.org/almalinux/%{major_version}/groonga-release-latest.noarch.rpm ->
+  #   https://packages.groonga.org/almalinux/8/groonga-release-latest.noarch.rpm
+  #
+  # On AlmaLinux 9:
+  #   https://apache.jfrog.io/artifactory/arrow/almalinux/%{major_version}/apache-arrow-release-latest.rpm ->
+  #   https://apache.jfrog.io/artifactory/arrow/almalinux/9/apache-arrow-release-latest.rpm
+  #
+  #   https://packages.groonga.org/almalinux/%{major_version}/groonga-release-latest.noarch.rpm ->
+  #   https://packages.groonga.org/almalinux/9/groonga-release-latest.noarch.rpm
+  spec.requirements << "system: groonga: rhel: https://apache.jfrog.io/artifactory/arrow/almalinux/%{major_version}/apache-arrow-release-latest.rpm"
+  spec.requirements << "system: groonga: rhel: https://packages.groonga.org/almalinux/%{major_version}/groonga-release-latest.noarch.rpm"
+  # Install pkgconfig(groonga) from the registered repositories.
+  spec.requirements << "system: groonga: rhel: pkgconfig(groonga)"
 
   # ...
 end
