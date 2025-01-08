@@ -68,7 +68,7 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      /host/dockerfiles/run-test.sh dummy-cairo dummy-mysql
 
   conda:
     build:
