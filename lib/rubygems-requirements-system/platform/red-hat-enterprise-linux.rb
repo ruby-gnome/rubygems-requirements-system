@@ -13,11 +13,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative "base"
+require_relative "fedora"
 
 module RubyGemsRequirementsSystem
   module Platform
-    class RedHatEnterpriseLinux < Base
+    class RedHatEnterpriseLinux < Fedora
       Platform.register(self)
 
       class << self
@@ -34,17 +34,15 @@ module RubyGemsRequirementsSystem
         when "redhat" # For backward compatibility
           true
         else
-          false
+          super
         end
       end
 
-      def default_system_packages(packages)
-        packages.collect {|package| "pkgconfig(#{package.id})"}
-      end
-
       private
-
       def install_command_line(package)
+        if package.start_with?("https://")
+          package = resolve_package_url_template(package)
+        end
         if major_version >= 9
           ["dnf", "install", "--enablerepo=crb", "-y", package]
         elsif major_version >= 8
@@ -56,11 +54,6 @@ module RubyGemsRequirementsSystem
 
       def need_super_user_priviledge?
         true
-      end
-
-      def major_version
-        major_version_string = File.read("/etc/redhat-release")[/(\d+)/, 0]
-        Integer(major_version_string, 10)
       end
     end
   end

@@ -13,11 +13,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative "red-hat-enterprise-linux"
+require_relative "base"
 
 module RubyGemsRequirementsSystem
   module Platform
-    class Fedora < RedHatEnterpriseLinux
+    class Fedora < Base
       Platform.register(self)
 
       class << self
@@ -28,16 +28,37 @@ module RubyGemsRequirementsSystem
       end
 
       def target?(platform)
-        platform == "fedora" || super
+        platform == "fedora"
+      end
+
+      def default_system_packages(packages)
+        packages.collect {|package| "pkgconfig(#{package.id})"}
       end
 
       private
       def install_command_line(package)
+        if package.start_with?("https://")
+          package = resolve_package_url_template(package)
+        end
         ["dnf", "install", "-y", package]
       end
 
       def need_super_user_priviledge?
         true
+      end
+
+      def resolve_package_url_template(package_url_template)
+        os_release = OSRelease.new
+        package_url_template % {
+          distribution: os_release.id,
+          major_version: major_version,
+          version: os_release.version,
+        }
+      end
+
+      def major_version
+        major_version_string = File.read("/etc/redhat-release")[/(\d+)/, 0]
+        Integer(major_version_string, 10)
       end
     end
   end

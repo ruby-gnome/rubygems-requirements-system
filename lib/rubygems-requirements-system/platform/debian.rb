@@ -51,13 +51,7 @@ module RubyGemsRequirementsSystem
 
       def install_command_line(package)
         if package.start_with?("https://")
-          package_url_template = package
-          os_release = OSRelease.new
-          package_url = package_url_template % {
-            distribution: os_release.id,
-            code_name: os_release.version_codename,
-            version: os_release.version,
-          }
+          package_url = resolve_package_url_template(package)
           local_package = Tempfile.new([
                                          "rubygems-requirements-system-debian",
                                          File.extname(package),
@@ -83,6 +77,15 @@ module RubyGemsRequirementsSystem
 
       def need_super_user_priviledge?
         true
+      end
+
+      def resolve_package_url_template(package_url_template)
+        os_release = OSRelease.new
+        package_url_template % {
+          distribution: os_release.id,
+          code_name: os_release.version_codename,
+          version: os_release.version,
+        }
       end
     end
   end

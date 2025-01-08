@@ -31,4 +31,7 @@ Gem::Specification.new do |spec|
   spec.requirements << "system: groonga: debian: https://packages.groonga.org/%{distribution}/groonga-apt-source-latest-%{code_name}.deb"
   spec.requirements << "system: groonga: ubuntu: ppa:groonga/ppa"
   spec.requirements << "system: groonga: debian: libgroonga-dev"
+  spec.requirements << "system: groonga: rhel: https://apache.jfrog.io/artifactory/arrow/almalinux/%{major_version}/apache-arrow-release-latest.rpm"
+  spec.requirements << "system: groonga: rhel: https://packages.groonga.org/almalinux/%{major_version}/groonga-release-latest.noarch.rpm"
+  spec.requirements << "system: groonga: rhel: pkgconfig(groonga)"
 end
