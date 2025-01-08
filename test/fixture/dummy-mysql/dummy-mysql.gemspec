@@ -29,6 +29,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency("rubygems-requirements-system")
 
   spec.requirements << "system: mysqlclient|libmariadb: arch_linux: mariadb-libs"
-  spec.requirements << "system: mysqlclient|libmariadb: debian: libmysqlclient-dev"
   spec.requirements << "system: mysqlclient|libmariadb: debian: libmariadb-dev"
+  spec.requirements << "system: mysqlclient|libmariadb: ubuntu: libmysqlclient-dev"
 end
