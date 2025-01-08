@@ -43,11 +43,33 @@ module RubyGemsRequirementsSystem
       end
 
       private
-      def prepare_command_line(package)
-        ["apt-get", "update"]
+      def prepare_command_lines(package)
+        [
+          ["apt-get", "update"],
+        ]
       end
 
       def install_command_line(package)
+        if package.start_with?("https://")
+          package_url_template = package
+          os_release = OSRelease.new
+          package_url = package_url_template % {
+            distribution: os_release.id,
+            code_name: os_release.version_codename,
+            version: os_release.version,
+          }
+          local_package = Tempfile.new([
+                                         "rubygems-requirements-system-debian",
+                                         File.extname(package),
+                                       ])
+          URI.open(package_url) do |response|
+            IO.copy_stream(response, local_package)
+          end
+          local_package.close
+          @temporary_files << local_package
+          FileUtils.chmod("go+r", local_package.path)
+          package = local_package.path
+        end
         [
           "env",
           "DEBIAN_FRONTEND=noninteractive",

@@ -41,6 +41,10 @@ module RubyGemsRequirementsSystem
       self["VERSION"]
     end
 
+    def version_codename
+      self["VERSION_CODENAME"]
+    end
+
     private
     def parse
       @variables = {}

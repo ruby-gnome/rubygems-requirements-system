@@ -14,6 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require "fileutils"
+require "open-uri"
+require "tempfile"
 
 require_relative "../executable-finder"
 require_relative "../os-release"
@@ -22,6 +24,10 @@ module RubyGemsRequirementsSystem
   module Platform
     class Base
       include Gem::UserInteraction
+
+      def initialize
+        @temporary_files = []
+      end
 
       def target?(platform)
         raise NotImpelementedError
@@ -80,8 +86,7 @@ module RubyGemsRequirementsSystem
       end
 
       def install_package(package)
-        command_line = prepare_command_line(package)
-        if command_line
+        prepare_command_lines(package).each do |command_line|
           unless run_command_line(package, "prepare", command_line)
             return false
           end
@@ -91,7 +96,6 @@ module RubyGemsRequirementsSystem
 
       def run_command_line(package, action, command_line)
         failed_to_get_super_user_priviledge = false
-        command_line = install_command_line(package)
         if have_priviledge?
           succeeded = system(*command_line)
         else
@@ -118,13 +122,13 @@ module RubyGemsRequirementsSystem
           alert_warning("'#{package}' system package is required.")
           alert_warning("Run the following command " +
                         "to #{action} required system package: " +
-                        escaped_command.join(" "))
+                        escaped_command_line.join(" "))
         end
         succeeded
       end
 
-      def prepare_command_line(package)
-        nil
+      def prepare_command_lines(package)
+        []
       end
 
       def install_command_line(package)

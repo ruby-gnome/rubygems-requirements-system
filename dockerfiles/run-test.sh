@@ -38,12 +38,25 @@ else
   rake install
 fi
 
-cd test/fixture/dummy-cairo
-gem build *.gemspec
-# Gentoo Linux uses --install-dir by default. It's conflicted with
-# --user-install.
-if gem env | grep -q -- --install-dir; then
-  gem install ./*.gem "$@"
+test_gems=()
+if [ $# -eq 0 ]; then
+  for test_gem in test/fixture/*; do
+    test_gems+=(${test_gem})
+  done
 else
-  gem install --user-install ./*.gem "$@"
+  for test_gem in "$@"; do
+    test_gems+=(test/fixture/${test_gem})
+  done
 fi
+for test_gem in "${test_gems[@]}"; do
+  pushd ${test_gem}
+  gem build *.gemspec
+  # Gentoo Linux uses --install-dir by default. It's conflicted with
+  # --user-install.
+  if gem env | grep -q -- --install-dir; then
+    gem install ./*.gem
+  else
+    gem install --user-install ./*.gem
+  fi
+  popd
+done
