@@ -28,7 +28,7 @@ RUN \
     which
 
 RUN \
-  useradd --user-group --groups wheel --create-home devel
+  useradd --user-group --groups wheel,ruby --create-home devel
 
 RUN \
   echo "devel ALL=(ALL:ALL) NOPASSWD:ALL" | \
@@ -36,3 +36,9 @@ RUN \
 
 USER devel
 WORKDIR /home/devel
+
+# This is just for creating /var/cache/ruby/index.rubygems.org%443/
+# by the "devel" user.
+RUN \
+  gem install --user-install pkg-config && \
+  gem uninstall pkg-config
