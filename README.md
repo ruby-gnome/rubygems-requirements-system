@@ -209,8 +209,9 @@ end
 
 ## Requirements
 
-RubyGems 3.5.0 or later is required. RubyGems can load installed
-plugin immediately since 3.5.0.
+RubyGems 3.4.14 or later is required. RubyGems can load installed
+plugin immediately since 3.4.14. Ruby 3.2.3 or later ships RubyGems
+3.4.14 or later.
 
 If `gem install glib2` installs rubygems-requirements-system gem as a
 dependency, old RubyGems doesn't use a RubyGems plugin in
