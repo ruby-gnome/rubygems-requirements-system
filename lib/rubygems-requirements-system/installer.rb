@@ -63,6 +63,8 @@ module RubyGemsRequirementsSystem
     end
 
     def install
+      return true unless enabled?
+
       requirements = parse_requirements(@gemspec.requirements)
       requirements.all? do |requirement|
         next true if requirement.satisfied?
@@ -71,6 +73,18 @@ module RubyGemsRequirementsSystem
     end
 
     private
+    def enabled?
+      case ENV["RUBYGEMS_REQUIREMENTS_SYSTEM"]
+      when "0", "no", "NO", "false", "FALSE"
+        return false
+      end
+
+      requirements_system = Gem.configuration["requirements_system"] || {}
+      return false if requirements_system["enabled"] == false
+
+      true
+    end
+
     def parse_requirements(gemspec_requirements)
       all_packages_set = {}
       requirements = {}

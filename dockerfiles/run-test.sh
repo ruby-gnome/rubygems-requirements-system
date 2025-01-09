@@ -36,6 +36,19 @@ if ruby --help | grep gems | grep -q 'default: disabled'; then
   # PLD Linux
   export RUBYOPT="--enable=gems"
 fi
+gem_install_options=()
+# Gentoo Linux uses --install-dir by default. It's conflicted with
+# --user-install.
+if gem env | grep -q -- --install-dir; then
+  :
+else
+  gem_install_options+=(--user-install)
+fi
+disable_gemrc=$(pwd)/disabled-gemrc
+cat <<GEMRC > ${disable_gemrc}
+requirements_system:
+  enabled: false
+GEMRC
 group_end
 
 group_begin "Install"
@@ -69,13 +82,20 @@ for test_gem in "${test_gems[@]}"; do
   group_begin "Test: $(basename ${test_gem})"
   pushd ${test_gem}
   gem build *.gemspec
-  # Gentoo Linux uses --install-dir by default. It's conflicted with
-  # --user-install.
-  if gem env | grep -q -- --install-dir; then
-    gem install ./*.gem
-  else
-    gem install --user-install ./*.gem
+  # Must be failed
+  for disabled_value in 0 no NO false FALSE; do
+    if RUBYGEMS_REQUIREMENTS_SYSTEM=${disabled_value} \
+         gem install "${gem_install_options[@]}" ./*.gem; then
+      exit 1
+    fi
+  done
+  # Must be failed
+  if gem install "${gem_install_options[@]}" \
+       --config-file=${disable_gemrc} ./*.gem; then
+    exit 1
   fi
+  # Must be succeeded
+  gem install "${gem_install_options[@]}" ./*.gem
   popd
   group_end
 done

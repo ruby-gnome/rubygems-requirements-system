@@ -207,6 +207,21 @@ Gem::Specification.new do |spec|
 end
 ```
 
+## Configurations
+
+### Opt-out
+
+If you don't like that gems may install system packages automatically,
+you can disable this feature by the followings:
+
+1. Set `RUBYGEMS_REQUIREMENTS_SYSTEM=false`
+2. Add the following configuration to `~/.gemrc`:
+
+   ```yaml
+   requirements_system:
+     enabled: true
+   ```
+
 ## Requirements
 
 RubyGems 3.4.14 or later is required. RubyGems can load installed
