@@ -15,8 +15,19 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set -eux
+set -eu
 
+group_begin() {
+  echo "::group::$1"
+  set -x
+}
+
+group_end() {
+  set +x
+  echo "::endgroup::"
+}
+
+group_begin "Prepare"
 rm -rf build
 cp -r /host build
 cd build
@@ -25,7 +36,9 @@ if ruby --help | grep gems | grep -q 'default: disabled'; then
   # PLD Linux
   export RUBYOPT="--enable=gems"
 fi
+group_end
 
+group_begin "Install"
 if gem env | grep -q -- --user-install; then
   # Arch Linux
   rake install
@@ -37,7 +50,9 @@ elif sudo which rake; then
 else
   rake install
 fi
+group_end
 
+group_begin "Collect test targets"
 test_gems=()
 if [ $# -eq 0 ]; then
   for test_gem in test/fixture/*; do
@@ -48,7 +63,10 @@ else
     test_gems+=(test/fixture/${test_gem})
   done
 fi
+group_end
+
 for test_gem in "${test_gems[@]}"; do
+  group_begin "Test: $(basename ${test_gem})"
   pushd ${test_gem}
   gem build *.gemspec
   # Gentoo Linux uses --install-dir by default. It's conflicted with
@@ -59,4 +77,5 @@ for test_gem in "${test_gems[@]}"; do
     gem install --user-install ./*.gem
   fi
   popd
+  group_end
 done
