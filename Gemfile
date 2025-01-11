@@ -19,5 +19,11 @@ source "https://rubygems.org/"
 
 gemspec
 
-gem "bundler"
-gem "rake"
+group :development, :test do
+  gem "bundler"
+  gem "rake"
+end
+
+group :test do
+  gem "test-unit"
+end
