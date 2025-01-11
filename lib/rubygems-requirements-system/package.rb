@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module RubyGemsRequirementsSystem
-  Package = Struct.new(:id, :operator, :version) do
+  Package = Struct.new(:id, :operator, :required_version) do
     class << self
       def parse(input)
         new(*input.split(/\s*(==|>=|>|<=|<)\s*/, 3))
@@ -23,8 +23,16 @@ module RubyGemsRequirementsSystem
 
     def valid?
       return false if id.empty?
-      return false if operator and version.nil?
+      return false if operator and required_version.nil?
       true
+    end
+
+    def satisfied?(target_version)
+      return true if required_version.nil?
+
+      target = Gem::Version.new(target_version)
+      required = Gem::Version.new(required_version)
+      target.__send__(operator, required)
     end
   end
 end

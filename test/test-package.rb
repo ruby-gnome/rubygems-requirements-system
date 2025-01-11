@@ -18,7 +18,7 @@ require_relative "helper"
 class TestPackage < Test::Unit::TestCase
   Package = RubyGemsRequirementsSystem::Package
 
-  class TestParse < self
+  sub_test_case(".parse") do
     def test_id
       assert_equal(Package.new("cairo"),
                    Package.parse("cairo"))
@@ -47,6 +47,74 @@ class TestPackage < Test::Unit::TestCase
     def test_operator_less_than
       assert_equal(Package.new("cairo", "<", "1.0"),
                    Package.parse("cairo < 1.0"))
+    end
+  end
+
+  sub_test_case("#satisfied?") do
+    def test_no_required_version
+      assert do
+        Package.new("cairo").satisfied?("1.0.0")
+      end
+    end
+
+    def test_equal_true
+      assert do
+        Package.new("cairo", "==", "1.0.0").satisfied?("1.0.0")
+      end
+    end
+
+    def test_equal_false
+      assert do
+        not Package.new("cairo", "==", "1.0.0").satisfied?("1.0.1")
+      end
+    end
+
+    def test_greater_than_equal_true
+      assert do
+        Package.new("cairo", ">=", "1.0.2").satisfied?("1.0.2")
+      end
+    end
+
+    def test_greater_than_equal_false
+      assert do
+        not Package.new("cairo", ">=", "1.0.2").satisfied?("1.0.1")
+      end
+    end
+
+    def test_greater_than_true
+      assert do
+        Package.new("cairo", ">", "1.0.2").satisfied?("1.0.3")
+      end
+    end
+
+    def test_greater_than_false
+      assert do
+        not Package.new("cairo", ">", "1.0.2").satisfied?("1.0.2")
+      end
+    end
+
+    def test_less_than_equal_true
+      assert do
+        Package.new("cairo", "<=", "1.0.2").satisfied?("1.0.2")
+      end
+    end
+
+    def test_less_than_equal_false
+      assert do
+        not Package.new("cairo", "<=", "1.0.2").satisfied?("1.0.3")
+      end
+    end
+
+    def test_less_than_true
+      assert do
+        Package.new("cairo", "<", "1.0.2").satisfied?("1.0.1")
+      end
+    end
+
+    def test_less_than_false
+      assert do
+        not Package.new("cairo", "<", "1.0.2").satisfied?("1.0.2")
+      end
     end
   end
 end

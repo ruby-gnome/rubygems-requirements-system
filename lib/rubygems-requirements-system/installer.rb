@@ -39,11 +39,7 @@ module RubyGemsRequirementsSystem
         return false
       end
 
-      return true if package.version.nil?
-
-      current_version = Gem::Version.new(package_config.version)
-      required_version = Gem::Version.new(package.version)
-      current_version.__send__(package.operator, required_version)
+      package.satisfied?(package_config.version)
     end
   end
 
