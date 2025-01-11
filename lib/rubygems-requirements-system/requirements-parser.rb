@@ -1,4 +1,4 @@
-# Copyright (C) 2017-2025  Ruby-GNOME Project Team
+# Copyright (C) 2025  Ruby-GNOME Project Team
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -13,51 +13,20 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require "shellwords"
-
-require "pkg-config"
-
-require_relative "version"
-
-require_relative "platform"
-require_relative "requirements-parser"
+require_relative "package"
+require_relative "requirement"
 
 module RubyGemsRequirementsSystem
-  class Installer
-    include Gem::UserInteraction
-
-    def initialize(gemspec)
-      @gemspec = gemspec
-      @platform = Platform.detect
+  class RequirementsParser
+    def initialize(gemspec_requirements, platform)
+      @gemspec_requirements = gemspec_requirements
+      @platform = platform
     end
 
-    def install
-      return true unless enabled?
-
-      requirements = parse_requirements(@gemspec.requirements)
-      requirements.all? do |requirement|
-        next true if requirement.satisfied?
-        @platform.install(requirement)
-      end
-    end
-
-    private
-    def enabled?
-      case ENV["RUBYGEMS_REQUIREMENTS_SYSTEM"]
-      when "0", "no", "NO", "false", "FALSE"
-        return false
-      end
-
-      requirements_system = Gem.configuration["requirements_system"] || {}
-      return false if requirements_system["enabled"] == false
-
-      true
-    end
-
-    def parse_requirements(gemspec_requirements)
+    def parse
       all_packages_set = {}
       requirements = {}
-      gemspec_requirements.each do |gemspec_requirement|
+      @gemspec_requirements.each do |gemspec_requirement|
         components = gemspec_requirement.split(/: +/, 4)
         next unless components.size == 4
 
@@ -83,6 +52,7 @@ module RubyGemsRequirementsSystem
       end
     end
 
+    private
     def parse_packages(raw_packages)
       packages = raw_packages.split(/\s*\|\s*/).collect do |raw_package|
         Package.parse(raw_package)

@@ -15,6 +15,7 @@
 
 require "fileutils"
 require "open-uri"
+require "rubygems/user_interaction"
 require "tempfile"
 
 require_relative "../executable-finder"
