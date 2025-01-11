@@ -19,17 +19,10 @@ require "pkg-config"
 
 require_relative "version"
 
+require_relative "package"
 require_relative "platform"
 
 module RubyGemsRequirementsSystem
-  Package = Struct.new(:id, :operator, :version) do
-    def valid?
-      return false if id.empty?
-      return false if operator and version.nil?
-      true
-    end
-  end
-
   Requirement = Struct.new(:packages, :system_packages) do
     def satisfied?
       packages.any? do |package|
@@ -116,7 +109,7 @@ module RubyGemsRequirementsSystem
 
     def parse_packages(raw_packages)
       packages = raw_packages.split(/\s*\|\s*/).collect do |raw_package|
-        Package.new(*raw_package.split(/\s*(==|!=|>=|>|<=|<)\s*/, 3))
+        Package.parse(raw_package)
       end
       # Ignore this requirement if any invalid package is included.
       # We must not report an error for this because

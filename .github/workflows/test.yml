@@ -18,6 +18,18 @@ on:
   - push
   - pull_request
 jobs:
+  unit:
+    name: Unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ruby
+          bundler-cache: true
+      - name: Test
+        run: |
+          bundle exec test/run.rb
   docker:
     name: ${{ matrix.distribution }}
     strategy:
