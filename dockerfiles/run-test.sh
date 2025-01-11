@@ -79,23 +79,29 @@ fi
 group_end
 
 for test_gem in "${test_gems[@]}"; do
-  group_begin "Test: $(basename ${test_gem})"
   pushd ${test_gem}
+  group_begin "Test: $(basename ${test_gem}): Prepare"
   gem build *.gemspec
+  group_end
   # Must be failed
   for disabled_value in 0 no NO false FALSE; do
+    group_begin "Test: $(basename ${test_gem}): Disable by env: ${disabled_value}"
     if RUBYGEMS_REQUIREMENTS_SYSTEM=${disabled_value} \
          gem install "${gem_install_options[@]}" ./*.gem; then
       exit 1
     fi
+    group_end
   done
+  group_begin "Test: $(basename ${test_gem}): Disable by configuration"
   # Must be failed
   if gem install "${gem_install_options[@]}" \
        --config-file=${disable_gemrc} ./*.gem; then
     exit 1
   fi
+  group_end
+  group_begin "Test: $(basename ${test_gem}): Default"
   # Must be succeeded
   gem install "${gem_install_options[@]}" ./*.gem
-  popd
   group_end
+  popd
 done
