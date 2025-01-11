@@ -22,6 +22,7 @@ jobs:
     name: Unit
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
