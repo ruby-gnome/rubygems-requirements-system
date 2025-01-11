@@ -50,6 +50,32 @@ class TestPackage < Test::Unit::TestCase
     end
   end
 
+  sub_test_case("#valid?") do
+    def test_id_only
+      assert do
+        Package.new("cairo").valid?
+      end
+    end
+
+    def test_empty_id
+      assert do
+        not Package.new("").valid?
+      end
+    end
+
+    def test_operator_only
+      assert do
+        not Package.new("cairo", ">").valid?
+      end
+    end
+
+    def test_full
+      assert do
+        Package.new("cairo", ">", "1.0.0").valid?
+      end
+    end
+  end
+
   sub_test_case("#satisfied?") do
     def test_no_required_version
       assert do
