@@ -255,7 +255,6 @@ See also: https://wiki.debian.org/SourcesList
 Here are metadata for a Yum repository:
 
 * `baseurl`: Required. The base URL that provides this repository.
-* `gpgcheck`: Optional. No default.
 * `gpgkey`: Optional. The URL of GPG key that is used for signing this
   repository.
 * `name`: Optional. The name of this repository.
@@ -314,7 +313,6 @@ Gem::Specification.new do |spec|
   spec.requirements << "system: libpq: rhel: repository: id: pgdg17"
   spec.requirements << "system: libpq: rhel: repository: name: PostgreSQL 17 $releasever - $basearch"
   spec.requirements << "system: libpq: rhel: repository: baseurl: https://download.postgresql.org/pub/repos/yum/17/redhat/rhel-$releasever-$basearch"
-  spec.requirements << "system: libpq: rhel: repository: gpgcheck: 1"
   spec.requirements << "system: libpq: rhel: repository: gpgkey: https://download.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL"
   # You can disable built-in "postgresql" module by "module: disable:
   # postgresql".

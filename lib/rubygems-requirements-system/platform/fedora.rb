@@ -86,7 +86,7 @@ module RubyGemsRequirementsSystem
           "name" => resolve_value_template(repository["name"]),
           "baseurl" => resolve_value_template(repository["baseurl"]),
           "enabled" => "1",
-          "gpgcheck" => repository["gpgcheck"],
+          "gpgcheck" => repository["gpgkey"] ? "1" : "0",
           "gpgkey" => resolve_value_template(repository["gpgkey"]),
         }.each do |key, value|
           next if value.nil?

@@ -32,18 +32,25 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency("rubygems-requirements-system")
 
   prefix = "system: libpq >= 17"
+
   spec.requirements << "#{prefix}: debian: repository: id: pgdg"
   spec.requirements << "#{prefix}: debian: repository: uris: https://apt.postgresql.org/pub/repos/apt"
   spec.requirements << "#{prefix}: debian: repository: signed-by: https://www.postgresql.org/media/keys/ACCC4CF8.asc"
   spec.requirements << "#{prefix}: debian: repository: suites: %{code_name}-pgdg"
   spec.requirements << "#{prefix}: debian: repository: components: main"
+
   spec.requirements << "#{prefix}: debian: libpq-dev"
+
+  # We need to install libssl.pc explicitly because postgresql17-devel
+  # doesn't have openssl-devel dependency.
   spec.requirements << "#{prefix}: rhel: pkgconfig(libssl)"
+
   spec.requirements << "#{prefix}: rhel: repository: id: pgdg17"
   spec.requirements << "#{prefix}: rhel: repository: name: PostgreSQL 17 $releasever - $basearch"
   spec.requirements << "#{prefix}: rhel: repository: baseurl: https://download.postgresql.org/pub/repos/yum/17/redhat/rhel-$releasever-$basearch"
-  spec.requirements << "#{prefix}: rhel: repository: gpgcheck: 1"
   spec.requirements << "#{prefix}: rhel: repository: gpgkey: https://download.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL"
+
   spec.requirements << "#{prefix}: rhel: module: disable: postgresql"
+
   spec.requirements << "#{prefix}: rhel: postgresql17-devel"
 end
