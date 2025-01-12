@@ -41,7 +41,7 @@ module RubyGemsRequirementsSystem
       private
       def install_command_line_package(package)
         if package.start_with?("https://")
-          package = resolve_package_url_template(package)
+          package = resolve_value_template(package)
         end
         if major_version >= 9
           ["dnf", "-y", "install", "--enablerepo=crb", package]
