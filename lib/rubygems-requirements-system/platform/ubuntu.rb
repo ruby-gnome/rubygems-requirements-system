@@ -39,7 +39,7 @@ module RubyGemsRequirementsSystem
 
       private
       def prepare_command_lines(package)
-        if package.start_with?("ppa:")
+        if package.is_a?(String) and package.start_with?("ppa:")
           [
             ["apt-get", "update"],
             install_command_line("software-properties-common"),
@@ -49,7 +49,7 @@ module RubyGemsRequirementsSystem
         end
       end
 
-      def install_command_line(package)
+      def install_command_line_package(package)
         if package.start_with?("ppa:")
           [
             "add-apt-repository",
