@@ -173,7 +173,7 @@ Gem::Specification.new do |spec|
   #
   # On Ubuntu 24.04:
   #   https://packages.groonga.org/%{distribution}/groonga-apt-source-latest-%{code_name}.deb ->
-  #   https://packages.groonga.org/ubuntu/groonga-apt-source-latest-nobole.deb
+  #   https://packages.groonga.org/ubuntu/groonga-apt-source-latest-noble.deb
   spec.requirements << "system: groonga: debian: https://packages.groonga.org/%{distribution}/groonga-apt-source-latest-%{code_name}.deb"
   # Install libgroonga-dev from the registered repository.
   spec.requirements << "system: groonga: debian: libgroonga-dev"
@@ -202,6 +202,127 @@ Gem::Specification.new do |spec|
   spec.requirements << "system: groonga: rhel: https://packages.groonga.org/almalinux/%{major_version}/groonga-release-latest.noarch.rpm"
   # Install pkgconfig(groonga) from the registered repositories.
   spec.requirements << "system: groonga: rhel: pkgconfig(groonga)"
+
+  # ...
+end
+```
+
+### Install repositories
+
+You can install APT/Yum repositories by specifying metadata.
+
+You need to specify multiple metadata for one repository. So you need
+to use multiple `spec.requirements` for one repository. Here is the
+syntax for one repository:
+
+```ruby
+spec.requirements << "system: #{package}: #{platform}: repository: #{key1}: #{value1}"
+spec.requirements << "system: #{package}: #{platform}: repository: #{key2}: #{value2}"
+# ...
+```
+
+You must specify at least `id` as `key`. For example:
+
+```
+spec.requirements << "system: libpq: debian: repository: id: pgdg"
+```
+
+You can start another repository metadata by starting `id` metadata
+for another repository:
+
+```ruby
+spec.requirements << "system: #{package}: #{platform}: repository: id: repository1
+spec.requirements << "system: #{package}: #{platform}: repository: #{key1_1}: #{value1_1}"
+spec.requirements << "system: #{package}: #{platform}: repository: #{key1_2}: #{value1_2}"
+# ...
+spec.requirements << "system: #{package}: #{platform}: repository: id: repository2
+spec.requirements << "system: #{package}: #{platform}: repository: #{key2_1}: #{value2_1}"
+spec.requirements << "system: #{package}: #{platform}: repository: #{key2_2}: #{value2_2}"
+# ...
+```
+
+Here are metadata for a APT repository:
+
+* `compoennts`: Optional. The default is `main`.
+* `signed-by`: Optional. The URL of armored keyring that is used for
+  signing this repository.
+* `suites`: Optional. The default is `%{code_name}`.
+* `types`: Optional. The default is `deb`.
+* `uris`: Required. The URLs that provide this repository.
+
+See also: https://wiki.debian.org/SourcesList
+
+Here are metadata for a Yum repository:
+
+* `baseurl`: Required. The base URL that provides this repository.
+* `gpgcheck`: Optional. No default.
+* `gpgkey`: Optional. The URL of GPG key that is used for signing this
+  repository.
+* `name`: Optional. The name of this repository.
+
+See also: TODO: Is there any URL that describes the specification of
+`.repo` file?
+
+You can use placeholder for metadata values with `%{KEY}` format.
+
+Here are available placeholders:
+
+`debian` family platforms:
+
+* `distribution`: The `ID` value in `/etc/os-release`. It's `debian`,
+  `ubuntu` and so on.
+* `code_name`: The `VERSION_CODENAME` value in `/etc/os-release`. It's
+  `bookworm`, `noble` and so on.
+* `version`: The `VERSION_ID` value in `/etc/os-release`. It's `12`,
+  `24.04` and so on.
+
+`fedora` family platforms:
+
+* `distribution`: The `ID` value in `/etc/os-release`. It's `fedora`,
+  `rhel`, `almalinux` and so on.
+* `major_version`: The major part of `VERSION_ID` value in
+  `/etc/os-release`. It's `41`, `9` and so on.
+* `version`: The `VERSION_ID` value in `/etc/os-release`. It's `41`,
+  `9.5` and so on.
+
+Here is an example that uses this feature for adding a new repository:
+
+```ruby
+Gem::Specification.new do |spec|
+  # ...
+
+  # Install PostgreSQL's APT repository on Debian family platforms.
+  #
+  # %{code_name} is placeholders.
+  #
+  # On Debian GNU/Linux bookworm:
+  #   %{code_name}-pgdg ->
+  #   bookworm-pgdg
+  #
+  # On Ubuntu 24.04:
+  #   %{code_name}-pgdg ->
+  #   noble-pgdg
+  spec.requirements << "system: libpq: debian: repository: id: pgdg"
+  spec.requirements << "system: libpq: debian: repository: uris: https://apt.postgresql.org/pub/repos/apt"
+  spec.requirements << "system: libpq: debian: repository: signed-by: https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+  spec.requirements << "system: libpq: debian: repository: suites: %{code_name}-pgdg"
+  spec.requirements << "system: libpq: debian: repository: components: main"
+  # Install libpq-dev from the registered repository.
+  spec.requirements << "system: libpq: debian: libpq-dev"
+
+  # Install PostgreSQL's Yum repository on RHEL family platforms:
+  spec.requirements << "system: libpq: rhel: repository: id: pgdg17"
+  spec.requirements << "system: libpq: rhel: repository: name: PostgreSQL 17 $releasever - $basearch"
+  spec.requirements << "system: libpq: rhel: repository: baseurl: https://download.postgresql.org/pub/repos/yum/17/redhat/rhel-$releasever-$basearch"
+  spec.requirements << "system: libpq: rhel: repository: gpgcheck: 1"
+  spec.requirements << "system: libpq: rhel: repository: gpgkey: https://download.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL"
+  # You can disable built-in "postgresql" module by "module: disable:
+  # postgresql".
+  spec.requirements << "system: libpq: rhel: module: disable: postgresql"
+  # Install postgresql17-devel from the registered repository. But
+  # users can't find "libpq.pc" provided by postgresql17-devel without
+  # PKG_CONFIG_PATH=/usr/pgsql-17/lib/pkgconfig ...
+  spec.requirements << "system: libpq: rhel: postgresql17-devel"
 
   # ...
 end

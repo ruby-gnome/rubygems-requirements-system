@@ -34,7 +34,8 @@ module RubyGemsRequirementsSystem
     def install
       return true unless enabled?
 
-      requirements = parse_requirements(@gemspec.requirements)
+      parser = RequirementsParser.new(@gemspec.requirements, @platform)
+      requirements = parser.parse
       requirements.all? do |requirement|
         next true if requirement.satisfied?
         @platform.install(requirement)
@@ -57,54 +58,6 @@ module RubyGemsRequirementsSystem
       end
 
       true
-    end
-
-    def parse_requirements(gemspec_requirements)
-      all_packages_set = {}
-      requirements = {}
-      gemspec_requirements.each do |gemspec_requirement|
-        components = gemspec_requirement.split(/: +/, 4)
-        next unless components.size == 4
-
-        id, raw_packages, platform, system_package = components
-        next unless id == "system"
-
-        packages = parse_packages(raw_packages)
-        next if packages.empty?
-
-        all_packages_set[packages] = true
-
-        next unless @platform.target?(platform)
-        requirements[packages] ||= []
-        requirements[packages] << system_package
-      end
-      (all_packages_set.keys - requirements.keys).each do |not_used_packages|
-        system_packages = @platform.default_system_packages(not_used_packages)
-        next if system_packages.nil?
-        requirements[not_used_packages] = system_packages
-      end
-      requirements.collect do |packages, system_packages|
-        Requirement.new(packages, system_packages)
-      end
-    end
-
-    def parse_packages(raw_packages)
-      packages = raw_packages.split(/\s*\|\s*/).collect do |raw_package|
-        Package.parse(raw_package)
-      end
-      # Ignore this requirement if any invalid package is included.
-      # We must not report an error for this because
-      # Gem::Specification#requirements is a free form
-      # configuration. So there are configuration values that use
-      # "system: ..." but not for this plugin. We can report a
-      # warning instead.
-      packages.each do |package|
-        unless package.valid?
-          # TODO: Report a warning
-          return []
-        end
-      end
-      packages
     end
   end
 end

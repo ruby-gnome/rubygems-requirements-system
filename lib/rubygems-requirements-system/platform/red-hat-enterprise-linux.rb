@@ -39,16 +39,16 @@ module RubyGemsRequirementsSystem
       end
 
       private
-      def install_command_line(package)
+      def install_command_line_package(package)
         if package.start_with?("https://")
           package = resolve_package_url_template(package)
         end
         if major_version >= 9
-          ["dnf", "install", "--enablerepo=crb", "-y", package]
+          ["dnf", "-y", "install", "--enablerepo=crb", package]
         elsif major_version >= 8
-          ["dnf", "install", "--enablerepo=powertools", "-y", package]
+          ["dnf", "-y", "install", "--enablerepo=powertools", package]
         else
-          ["yum", "install", "-y", package]
+          ["yum", "-y", "install", package]
         end
       end
 

@@ -80,26 +80,37 @@ group_end
 
 for test_gem in "${test_gems[@]}"; do
   pushd ${test_gem}
-  group_begin "Test: $(basename ${test_gem}): Prepare"
+  gem_name=$(basename ${test_gem})
+  group_begin "Test: ${gem_name}: Prepare"
   gem build *.gemspec
+  case "${gem_name}" in
+    dummy-postgresql-*)
+      # This is only for RHEL. PGDG's Yum repository uses
+      # /usr/pgsql-${VERSION}/lib/pkgconfig/ not /usr/lib64/pkgconfig/
+      # for libpq.pc.
+      postgresql_version=${gem_name#dummy-postgresql-}
+      postgresql_pkg_config_path=/usr/pgsql-${postgresql_version}/lib/pkgconfig
+      export PKG_CONFIG_PATH="${postgresql_pkg_config_path}${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}"
+      ;;
+  esac
   group_end
   # Must be failed
   for disabled_value in 0 no NO false FALSE; do
-    group_begin "Test: $(basename ${test_gem}): Disable by env: ${disabled_value}"
+    group_begin "Test: ${gem_name}: Disable by env: ${disabled_value}"
     if RUBYGEMS_REQUIREMENTS_SYSTEM=${disabled_value} \
          gem install "${gem_install_options[@]}" ./*.gem; then
       exit 1
     fi
     group_end
   done
-  group_begin "Test: $(basename ${test_gem}): Disable by configuration"
+  group_begin "Test: ${gem_name}: Disable by configuration"
   # Must be failed
   if gem install "${gem_install_options[@]}" \
        --config-file=${disable_gemrc} ./*.gem; then
     exit 1
   fi
   group_end
-  group_begin "Test: $(basename ${test_gem}): Default"
+  group_begin "Test: ${gem_name}: Default"
   # Must be succeeded
   gem install "${gem_install_options[@]}" ./*.gem
   group_end

@@ -15,6 +15,7 @@
 
 require_relative "package"
 require_relative "requirement"
+require_relative "system-repository"
 
 module RubyGemsRequirementsSystem
   class RequirementsParser
@@ -27,7 +28,7 @@ module RubyGemsRequirementsSystem
       all_packages_set = {}
       requirements = {}
       @gemspec_requirements.each do |gemspec_requirement|
-        components = gemspec_requirement.split(/: +/, 4)
+        components = gemspec_requirement.split(/:\s*/, 4)
         next unless components.size == 4
 
         id, raw_packages, platform, system_package = components
@@ -48,6 +49,7 @@ module RubyGemsRequirementsSystem
         requirements[not_used_packages] = system_packages
       end
       requirements.collect do |packages, system_packages|
+        system_packages = detect_system_repositories(system_packages)
         Requirement.new(packages, system_packages)
       end
     end
@@ -70,6 +72,41 @@ module RubyGemsRequirementsSystem
         end
       end
       packages
+    end
+
+    def detect_system_repositories(original_system_packages)
+      system_packages = []
+      repository_properties = {}
+
+      flush_repository = lambda do
+        return if repository_properties.empty?
+        properties = repository_properties
+        repository_properties = {}
+
+        id = properties.delete("id")
+        return if id.nil?
+        repository = SystemRepository.new(id, properties)
+        return unless @platform.valid_system_repository?(repository)
+        system_packages << repository
+      end
+
+      original_system_packages.each do |system_package|
+        unless system_package.start_with?("repository:")
+          flush_repository.call
+          next unless @platform.valid_system_package?(system_package)
+          system_packages << system_package
+          next
+        end
+        _, key, value = system_package.strip.split(/:\s*/, 3)
+        next if value.empty?
+        if key == "id" and repository_properties.key?("id")
+          flush_repository.call
+        end
+        repository_properties[key] = value
+      end
+      flush_repository.call
+
+      system_packages
     end
   end
 end

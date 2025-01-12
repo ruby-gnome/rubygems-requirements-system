@@ -34,7 +34,7 @@ module RubyGemsRequirementsSystem
     end
 
     def id_like
-      (self["ID_LIKE"] || "").split(/ /)
+      (self["ID_LIKE"] || "").split(/\s+/)
     end
 
     def version

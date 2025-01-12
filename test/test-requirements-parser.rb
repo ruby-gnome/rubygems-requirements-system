@@ -20,6 +20,7 @@ class TestRequiremtsParser < Test::Unit::TestCase
   Platform = RubyGemsRequirementsSystem::Platform
   Requirement = RubyGemsRequirementsSystem::Requirement
   RequirementsParser = RubyGemsRequirementsSystem::RequirementsParser
+  SystemRepository = RubyGemsRequirementsSystem::SystemRepository
 
   def setup
     @platform = Platform::Ubuntu.new
@@ -88,6 +89,75 @@ class TestRequiremtsParser < Test::Unit::TestCase
     assert_equal([
                    Requirement.new([Package.new("groonga")],
                                    ["ppa:groonga/ppa"]),
+                 ],
+                 parse(gemspec_requirements))
+  end
+
+  def test_repository
+    prefix = "system: libpq: debian:"
+    gemspec_requirements = [
+      "#{prefix} repository: id: pgdg",
+      "#{prefix} repository: components: main",
+      "#{prefix} repository: signed-by: https://www.postgresql.org/media/keys/ACCC4CF8.asc",
+      "#{prefix} repository: suites: %{code_name}-pgdg",
+      "#{prefix} repository: uris: https://apt.postgresql.org/pub/repos/apt",
+      "#{prefix} libpq-dev",
+    ]
+    repository_properties = {
+      "components" => "main",
+      "signed-by" => "https://www.postgresql.org/media/keys/ACCC4CF8.asc",
+      "suites" => "%{code_name}-pgdg",
+      "uris" => "https://apt.postgresql.org/pub/repos/apt",
+    }
+    repository = SystemRepository.new("pgdg", repository_properties)
+    assert_equal([
+                   Requirement.new([Package.new("libpq")],
+                                   [
+                                     repository,
+                                     "libpq-dev",
+                                   ]),
+                 ],
+                 parse(gemspec_requirements))
+  end
+
+  def test_repositories
+    prefix = "system: groonga: debian:"
+    gemspec_requirements = [
+      "#{prefix} repository: id: apache-arrow",
+      "#{prefix} repository: components: main",
+      "#{prefix} repository: signed-by: https://dist.apache.org/repos/dist/release/arrow/KEYS",
+      "#{prefix} repository: suites: %{code_name}",
+      "#{prefix} repository: uris: https://apache.jfrog.io/artifactory/arrow/%{distribution}/",
+      "#{prefix} repository: id: groonga",
+      "#{prefix} repository: components: main",
+      "#{prefix} repository: signed-by: https://packages.groonga.org/%{distribution}/groonga-archive-keyring.asc",
+      "#{prefix} repository: suites: %{code_name}",
+      "#{prefix} repository: uris: https://packages.groonga.org/%{distribution}/",
+      "#{prefix} libgroonga-dev",
+    ]
+    arrow_repository_properties = {
+      "components" => "main",
+      "signed-by" => "https://dist.apache.org/repos/dist/release/arrow/KEYS",
+      "suites" => "%{code_name}",
+      "uris" => "https://apache.jfrog.io/artifactory/arrow/%{distribution}/",
+    }
+    arrow_repository = SystemRepository.new("apache-arrow",
+                                            arrow_repository_properties)
+    groonga_repository_properties = {
+      "components" => "main",
+      "signed-by" => "https://packages.groonga.org/%{distribution}/groonga-archive-keyring.asc",
+      "suites" => "%{code_name}",
+      "uris" => "https://packages.groonga.org/%{distribution}/",
+    }
+    groonga_repository = SystemRepository.new("groonga",
+                                              groonga_repository_properties)
+    assert_equal([
+                   Requirement.new([Package.new("groonga")],
+                                   [
+                                     arrow_repository,
+                                     groonga_repository,
+                                     "libgroonga-dev",
+                                   ]),
                  ],
                  parse(gemspec_requirements))
   end

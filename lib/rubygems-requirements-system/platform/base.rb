@@ -34,6 +34,14 @@ module RubyGemsRequirementsSystem
         nil
       end
 
+      def valid_system_package?(package)
+        true
+      end
+
+      def valid_system_repository?(repository)
+        false
+      end
+
       def install(requirement)
         synchronize do
           requirement.system_packages.any? do |package|
@@ -109,12 +117,19 @@ module RubyGemsRequirementsSystem
       end
 
       def run_command_line(package, action, command_line)
+        if package.is_a?(SystemRepository)
+          package_label = "repository(#{package.id})"
+        else
+          package_label = package
+        end
+        prefix = "requirements: system: #{package_label}: #{action}"
+        say("#{prefix}: Start")
         failed_to_get_super_user_priviledge = false
         if have_priviledge?
           succeeded = system(*command_line)
         else
           if sudo
-            prompt = "[sudo] password for %u to #{action} <#{package}>: "
+            prompt = "[sudo] password for %u to #{action} <#{package_label}>: "
             command_line = [sudo, "-p", prompt, *command_line]
             succeeded = system(*command_line)
           else
@@ -127,13 +142,13 @@ module RubyGemsRequirementsSystem
         else
           result_message = succeeded ? "succeeded" : "failed"
         end
-        say("#{action.capitalize} '#{package}' system package: #{result_message}")
+        say("#{prefix}: #{result_message}")
 
         unless succeeded
           escaped_command_line = command_line.collect do |part|
             Shellwords.escape(part)
           end
-          alert_warning("'#{package}' system package is required.")
+          alert_warning("#{prefix}: Failed.")
           alert_warning("Run the following command " +
                         "to #{action} required system package: " +
                         escaped_command_line.join(" "))
