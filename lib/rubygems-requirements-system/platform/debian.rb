@@ -91,7 +91,7 @@ module RubyGemsRequirementsSystem
           next if value.nil?
           if value.include?("\n")
             sources.puts("#{key}:")
-            value.each_line do |line|
+            value.each_line(chomp: true) do |line|
               if line.empty?
                 sources.puts(" .")
               else
