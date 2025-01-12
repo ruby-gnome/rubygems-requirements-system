@@ -146,7 +146,12 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh
+      # dummy-groonga-repository-raw and dummy-postgresql-17 don't work
+      # because inline Singed-By doesn't work.
+      /host/dockerfiles/run-test.sh \
+        dummy-cairo \
+        dummy-groonga-repository-package \
+        dummy-mysql
 
   ubuntu-22.04:
     build:
