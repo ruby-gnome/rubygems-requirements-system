@@ -21,10 +21,10 @@ Gem::Specification.new do |spec|
   spec.authors = ["Sutou Kouhei"]
   spec.email = ["kou@cozmixng.org"]
   spec.licenses = ["LGPL-3.0-or-later"]
-  spec.summary = "Dummy gem that uses Groonga"
+  spec.summary = "Dummy gem that uses Groonga with package based repository"
   spec.description = "This is for testing rubygems-requirements-system"
-  spec.extensions = ["ext/dummy-groonga/extconf.rb"]
-  spec.files = ["ext/dummy-groonga/extconf.rb"]
+  spec.extensions = ["ext/dummy-groonga-repository-package/extconf.rb"]
+  spec.files = ["ext/dummy-groonga-repository-package/extconf.rb"]
 
   spec.add_runtime_dependency("rubygems-requirements-system")
 

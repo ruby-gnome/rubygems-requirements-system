@@ -21,4 +21,4 @@ unless PKGConfig.have_package("groonga")
   exit(false)
 end
 
-create_makefile("dummy_groonga")
+create_makefile("dummy_groonga_repository_raw")
