@@ -16,7 +16,8 @@
 module RubyGemsRequirementsSystem
   class SystemRepository
     attr_reader :id
-    protected attr_reader :properties
+    attr_reader :properties
+    protected :properties
     def initialize(id, properties)
       @id = id
       @properties = properties
