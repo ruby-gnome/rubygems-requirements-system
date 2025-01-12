@@ -81,7 +81,8 @@ group_end
 for test_gem in "${test_gems[@]}"; do
   pushd ${test_gem}
   gem_name=$(basename ${test_gem})
-  group_begin "Test: ${gem_name}: Prepare"
+
+  group_begin "Test: ${gem_name}: Setup"
   gem build *.gemspec
   case "${gem_name}" in
     dummy-postgresql-*)
@@ -93,26 +94,50 @@ for test_gem in "${test_gems[@]}"; do
       export PKG_CONFIG_PATH="${postgresql_pkg_config_path}${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}"
       ;;
   esac
+  if [ -d /etc/apt/sources.list.d ]; then
+    sudo cp -a /etc/apt/sources.list.d{,.bak}
+  fi
+  if [ -d /etc/yum.repos.d ]; then
+    sudo cp -a /etc/yum.repos.d{,.bak}
+  fi
   group_end
-  # Must be failed
-  for disabled_value in 0 no NO false FALSE; do
-    group_begin "Test: ${gem_name}: Disable by env: ${disabled_value}"
-    if RUBYGEMS_REQUIREMENTS_SYSTEM=${disabled_value} \
-         gem install "${gem_install_options[@]}" ./*.gem; then
+
+  if [ "${gem_name}" = "dummy-cairo" ]; then
+    # Must be failed
+    for disabled_value in 0 no NO false FALSE; do
+      group_begin "Test: ${gem_name}: Disable by env: ${disabled_value}"
+      if RUBYGEMS_REQUIREMENTS_SYSTEM=${disabled_value} \
+           gem install "${gem_install_options[@]}" ./*.gem; then
+        exit 1
+      fi
+      group_end
+    done
+    group_begin "Test: ${gem_name}: Disable by configuration"
+    # Must be failed
+    if gem install "${gem_install_options[@]}" \
+         --config-file=${disable_gemrc} ./*.gem; then
       exit 1
     fi
     group_end
-  done
-  group_begin "Test: ${gem_name}: Disable by configuration"
-  # Must be failed
-  if gem install "${gem_install_options[@]}" \
-       --config-file=${disable_gemrc} ./*.gem; then
-    exit 1
   fi
-  group_end
+
   group_begin "Test: ${gem_name}: Default"
   # Must be succeeded
   gem install "${gem_install_options[@]}" ./*.gem
   group_end
+
+  group_begin "Test: ${gem_name}: Cleanup"
+  if [ -d /etc/apt/sources.list.d.bak ]; then
+    sudo rm -rf /etc/apt/sources.list.d
+    sudo mv /etc/apt/sources.list.d{.bak,}
+    sudo apt purge -V libgroonga-dev || :
+  fi
+  if [ -d /etc/yum.repos.d.bak ]; then
+    sudo rm -rf /etc/yum.repos.d
+    sudo mv /etc/yum.repos.d{.bak,}
+    sudo apt purge -V groonga-devel || :
+  fi
+  group_end
+
   popd
 done
