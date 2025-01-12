@@ -94,11 +94,13 @@ for test_gem in "${test_gems[@]}"; do
       export PKG_CONFIG_PATH="${postgresql_pkg_config_path}${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}"
       ;;
   esac
-  if [ -d /etc/apt/sources.list.d ]; then
-    sudo cp -a /etc/apt/sources.list.d{,.bak}
-  fi
-  if [ -d /etc/yum.repos.d ]; then
-    sudo cp -a /etc/yum.repos.d{,.bak}
+  if [ -z "${CONDA_PREFIX:-}" ]; then
+    if [ -d /etc/apt/sources.list.d ]; then
+      sudo cp -a /etc/apt/sources.list.d{,.bak}
+    fi
+    if [ -d /etc/yum.repos.d ]; then
+      sudo cp -a /etc/yum.repos.d{,.bak}
+    fi
   fi
   group_end
 
