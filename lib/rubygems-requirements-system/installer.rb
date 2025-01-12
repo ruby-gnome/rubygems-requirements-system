@@ -49,7 +49,12 @@ module RubyGemsRequirementsSystem
       end
 
       requirements_system = Gem.configuration["requirements_system"] || {}
-      return false if requirements_system["enabled"] == false
+      case requirements_system["enabled"]
+      when false
+        return false
+      when "false" # "true"/"false" isn't converted to boolean with old RubyGems
+        return false
+      end
 
       true
     end
