@@ -23,7 +23,7 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh
+      - /host/dockerfiles/run-test.sh
 
   alpine-linux:
     build:
@@ -32,7 +32,8 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
 
   alt-linux:
     build:
@@ -41,7 +42,8 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
 
   amazon-linux-2:
     build:
@@ -50,7 +52,8 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
 
   amazon-linux-2023:
     build:
@@ -59,7 +62,8 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
 
   arch-linux:
     build:
@@ -68,7 +72,9 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo dummy-mysql
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
+      - dummy-mysql
 
   conda:
     build:
@@ -77,7 +83,8 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
 
   debian-bookworm:
     build:
@@ -88,7 +95,7 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh
+      - /host/dockerfiles/run-test.sh
 
   fedora:
     build:
@@ -99,12 +106,13 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
 
   gentoo-linux-portage:
     image: gentoo/portage
     command:
-      /bin/true
+      - /bin/true
 
   gentoo-linux:
     build:
@@ -115,7 +123,8 @@ services:
     volumes_from:
       - gentoo-linux-portage
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
 
   opensuse:
     build:
@@ -124,7 +133,8 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
 
   pld-linux:
     build:
@@ -135,7 +145,8 @@ services:
     security_opt:
       - seccomp:unconfined
     command:
-      /host/dockerfiles/run-test.sh dummy-cairo
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
 
   ubuntu-20.04:
     build:
@@ -148,10 +159,10 @@ services:
     command:
       # dummy-groonga-repository-raw and dummy-postgresql-17 don't work
       # because inline Singed-By doesn't work.
-      /host/dockerfiles/run-test.sh \
-        dummy-cairo \
-        dummy-groonga-repository-package \
-        dummy-mysql
+      - /host/dockerfiles/run-test.sh
+      - dummy-cairo
+      - dummy-groonga-repository-package
+      - dummy-mysql
 
   ubuntu-22.04:
     build:
@@ -162,7 +173,7 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh
+      - /host/dockerfiles/run-test.sh
 
   ubuntu-24.04:
     build:
@@ -173,4 +184,4 @@ services:
     volumes:
       - .:/host:delegated
     command:
-      /host/dockerfiles/run-test.sh
+      - /host/dockerfiles/run-test.sh
