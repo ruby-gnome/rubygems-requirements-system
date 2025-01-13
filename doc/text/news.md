@@ -1,5 +1,17 @@
 # News
 
+## 0.0.3 - 2025-01-13
+
+### Improvements
+
+  * Added support for opt-out.
+
+  * debian: Added support for adding APT repository by raw metadata.
+
+  * fedora: Added support for adding Yum repository by raw metadata.
+
+  * fedora: Added support for enabling/disabling module.
+
 ## 0.0.2 - 2025-01-08
 
 ### Improvements
