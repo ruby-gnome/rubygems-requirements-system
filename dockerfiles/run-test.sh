@@ -66,21 +66,21 @@ fi
 group_end
 
 group_begin "Collect test targets"
-test_gems=()
+test_gem_paths=()
 if [ $# -eq 0 ]; then
-  for test_gem in test/fixture/*; do
-    test_gems+=(${test_gem})
+  for test_gem_path in test/fixture/*; do
+    test_gem_paths+=(${test_gem_path})
   done
 else
   for test_gem in "$@"; do
-    test_gems+=(test/fixture/${test_gem})
+    test_gem_paths+=(test/fixture/${test_gem})
   done
 fi
 group_end
 
-for test_gem in "${test_gems[@]}"; do
-  pushd ${test_gem}
-  gem_name=$(basename ${test_gem})
+for test_gem_path in "${test_gem_paths[@]}"; do
+  pushd ${test_gem_path}
+  gem_name=$(basename ${test_gem_path})
 
   group_begin "Test: ${gem_name}: Setup"
   gem build *.gemspec
