@@ -40,21 +40,33 @@ developers and users. If we can reduce maintenance costs for
 developers, developers can focus on new features and bug fixes than
 releases.
 
-## Usage
+## Usage for users
 
-Add `rubygems-requirements-system` to your gem's runtime dependencies:
+If you're using Bundler, add the following line to your `Gemfile`:
 
 ```ruby
-Gem::Specification.new do |spec|
-  # ...
-  spec.add_runtime_dependency("rubygems-requirements-system")
-  # ...
-end
+plugin "rubygems-requirements-system"
 ```
+
+If you're not using Bundler, install `rubygems-requirements-system`:
+
+```bash
+gem install rubygems-requirements-system
+```
+
+## Usage for developers
+
+Add dependency information to `Gem::Specification#requirements`.
 
 ### Basic usage
 
-Add dependency information to `Gem::Specification#requirements`:
+In most cases, you can just specify the followings:
+
+1. Package ID
+2. Platform ID
+3. Package name on the platform
+
+See the following example:
 
 ```ruby
 Gem::Specification.new do |spec|
@@ -231,11 +243,11 @@ You can start another repository metadata by starting `id` metadata
 for another repository:
 
 ```ruby
-spec.requirements << "system: #{package}: #{platform}: repository: id: repository1
+spec.requirements << "system: #{package}: #{platform}: repository: id: repository1"
 spec.requirements << "system: #{package}: #{platform}: repository: #{key1_1}: #{value1_1}"
 spec.requirements << "system: #{package}: #{platform}: repository: #{key1_2}: #{value1_2}"
 # ...
-spec.requirements << "system: #{package}: #{platform}: repository: id: repository2
+spec.requirements << "system: #{package}: #{platform}: repository: id: repository2"
 spec.requirements << "system: #{package}: #{platform}: repository: #{key2_1}: #{value2_1}"
 spec.requirements << "system: #{package}: #{platform}: repository: #{key2_2}: #{value2_2}"
 # ...
@@ -328,29 +340,20 @@ end
 
 ## Configurations
 
-### Opt-out
+### Disable
 
-If you don't like that gems may install system packages automatically,
-you can disable this feature by the followings:
+If you want to install system packages automatically, you need to
+install rubygems-requirements-system gem explicitly (opt-in). You can
+disable rubygems-requirements-system gem even when you install this
+explicitly:
 
 1. Set `RUBYGEMS_REQUIREMENTS_SYSTEM=false`
 2. Add the following configuration to `~/.gemrc`:
 
    ```yaml
    requirements_system:
-     enabled: true
+     enabled: false
    ```
-
-## Requirements
-
-RubyGems 3.4.14 or later is required. RubyGems can load installed
-plugin immediately since 3.4.14. Ruby 3.2.3 or later ships RubyGems
-3.4.14 or later.
-
-If `gem install glib2` installs rubygems-requirements-system gem as a
-dependency, old RubyGems doesn't use a RubyGems plugin in
-rubygems-requirements-system gem while installing glib2 gem. So glib2
-gem dependencies aren't installed automatically.
 
 ## History
 
