@@ -15,7 +15,7 @@
 
 require_relative "rubygems-requirements-system/installer"
 
-Gem.pre_install do |installer|
-  installer = RubyGemsRequirementsSystem::Installer.new(installer.spec)
+Gem.pre_install do |gem_installer|
+  installer = RubyGemsRequirementsSystem::Installer.new(gem_installer.spec)
   installer.install
 end
