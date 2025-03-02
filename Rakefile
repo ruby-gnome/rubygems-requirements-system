@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require "bundler/gem_helper"
+require "json"
+require "open-uri"
 
 base_dir = File.dirname(__FILE__)
 helper = Bundler::GemHelper.new(base_dir)
@@ -23,6 +25,35 @@ def helper.version_tag
   version
 end
 helper.install
+
+def github_api(path)
+  URI("https://api.github.com/#{path}").open do |response|
+    JSON.parse(response.read)
+  end
+end
+
+def github_content(repository, tag, path, &block)
+  uri = "https://raw.githubusercontent.com/#{repository}/" +
+        "refs/tags/#{tag}/#{path}"
+  URI(uri).open(&block)
+end
+
+namespace :vendor do
+  namespace :pkg_config do
+    desc "Update vendored pkg-config"
+    task :update do
+      latest = github_api("repos/ruby-gnome/pkg-config/releases/latest")
+      github_content("ruby-gnome/pkg-config",
+                     latest["tag_name"],
+                     "lib/pkg-config.rb") do |response|
+        output_path = "lib/rubygems-requirements-system/pkg-config.rb"
+        File.open(output_path, "w") do |output|
+          IO.copy_stream(response, output)
+        end
+      end
+    end
+  end
+end
 
 release_task = Rake.application["release"]
 # We use Trusted Publishing.

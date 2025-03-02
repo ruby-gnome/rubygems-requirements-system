@@ -37,6 +37,4 @@ Users can install both system packages and an extension library by one action,
   spec.files = ["README.md", "Rakefile"]
   spec.files += Dir.glob("lib/**/*.rb")
   spec.files += Dir.glob("doc/text/**/*.*")
-
-  spec.add_runtime_dependency("pkg-config")
 end

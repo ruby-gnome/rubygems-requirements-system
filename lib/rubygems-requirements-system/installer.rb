@@ -15,14 +15,14 @@
 
 require "shellwords"
 
-require "pkg-config"
-
 require_relative "version"
 
 require_relative "platform"
 require_relative "requirements-parser"
 
 module RubyGemsRequirementsSystem
+  load(File.join(__dir__, "pkg-config.rb"), self)
+
   class Installer
     include Gem::UserInteraction
 
