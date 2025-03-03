@@ -21,7 +21,14 @@ require_relative "platform"
 require_relative "requirements-parser"
 
 module RubyGemsRequirementsSystem
-  load(File.join(__dir__, "pkg-config.rb"), self)
+  pkg_config_rb = File.join(__dir__, "pkg-config.rb")
+  load(pkg_config_rb, self)
+  unless const_defined?(:PKGConfig)
+    # Ruby < 3.1
+    File.open(pkg_config_rb) do |pkg_config_rb_file|
+      module_eval(pkg_config_rb_file.read, pkg_config_rb)
+    end
+  end
 
   class Installer
     include Gem::UserInteraction
