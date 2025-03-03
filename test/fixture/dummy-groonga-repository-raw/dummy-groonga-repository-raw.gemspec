@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.extensions = ["ext/dummy-groonga-repository-raw/extconf.rb"]
   spec.files = ["ext/dummy-groonga-repository-raw/extconf.rb"]
 
-  spec.add_runtime_dependency("rubygems-requirements-system")
+  spec.add_runtime_dependency("pkg-config")
 
   spec.requirements << "system: groonga: debian: repository: id: apache-arrow"
   spec.requirements << "system: groonga: debian: repository: uris: https://apache.jfrog.io/artifactory/arrow/%{distribution}/"

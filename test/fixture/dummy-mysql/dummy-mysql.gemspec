@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.extensions = ["ext/dummy-mysql/extconf.rb"]
   spec.files = ["ext/dummy-mysql/extconf.rb"]
 
-  spec.add_runtime_dependency("rubygems-requirements-system")
+  spec.add_runtime_dependency("pkg-config")
 
   spec.requirements << "system: mysqlclient|libmariadb: arch_linux: mariadb-libs"
   spec.requirements << "system: mysqlclient|libmariadb: debian: libmariadb-dev"

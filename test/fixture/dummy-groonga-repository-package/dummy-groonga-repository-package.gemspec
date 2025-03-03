@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.extensions = ["ext/dummy-groonga-repository-package/extconf.rb"]
   spec.files = ["ext/dummy-groonga-repository-package/extconf.rb"]
 
-  spec.add_runtime_dependency("rubygems-requirements-system")
+  spec.add_runtime_dependency("pkg-config")
 
   spec.requirements << "system: groonga: debian: https://packages.groonga.org/%{distribution}/groonga-apt-source-latest-%{code_name}.deb"
   spec.requirements << "system: groonga: ubuntu: ppa:groonga/ppa"

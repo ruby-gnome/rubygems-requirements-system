@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.extensions = ["ext/dummy-cairo/extconf.rb"]
   spec.files = ["ext/dummy-cairo/extconf.rb"]
 
-  spec.add_runtime_dependency("rubygems-requirements-system")
+  spec.add_runtime_dependency("pkg-config")
 
   spec.requirements << "system: cairo >= 1.2.0: alpine_linux: cairo-dev"
   spec.requirements << "system: cairo >= 1.2.0: alt_linux: bzlib-devel"
