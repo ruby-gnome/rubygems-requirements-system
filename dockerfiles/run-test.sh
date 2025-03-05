@@ -135,6 +135,9 @@ for test_gem_path in "${test_gem_paths[@]}"; do
     sudo apt purge -y -V libgroonga-dev || :
   fi
   if [ -d /etc/yum.repos.d.bak ]; then
+    sudo dnf remove -y groonga-release || :
+    sudo dnf remove -y apache-arrow-release || :
+    sudo dnf remove -y epel-release || :
     sudo rm -rf /etc/yum.repos.d
     sudo mv /etc/yum.repos.d{.bak,}
     sudo dnf remove -y groonga-devel || :
