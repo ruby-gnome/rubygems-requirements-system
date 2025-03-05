@@ -1,5 +1,16 @@
 # News
 
+## 0.0.4 - 2025-03-05
+
+### Improvements
+
+  * Bundled `pkg-config` gem.
+
+  * Changed to opt-in style. Each user must install this gem
+    explicitly.
+
+  * Added support for Bundler.
+
 ## 0.0.3 - 2025-01-13
 
 ### Improvements
