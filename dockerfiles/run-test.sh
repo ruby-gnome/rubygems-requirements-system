@@ -132,12 +132,12 @@ for test_gem_path in "${test_gem_paths[@]}"; do
   if [ -d /etc/apt/sources.list.d.bak ]; then
     sudo rm -rf /etc/apt/sources.list.d
     sudo mv /etc/apt/sources.list.d{.bak,}
-    sudo apt purge -V libgroonga-dev || :
+    sudo apt purge -y -V libgroonga-dev || :
   fi
   if [ -d /etc/yum.repos.d.bak ]; then
     sudo rm -rf /etc/yum.repos.d
     sudo mv /etc/yum.repos.d{.bak,}
-    sudo apt purge -V groonga-devel || :
+    sudo dnf remove -y groonga-devel || :
   fi
   group_end
 
