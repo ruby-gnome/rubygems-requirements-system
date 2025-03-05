@@ -39,10 +39,12 @@ Gem::Specification.new do |spec|
   spec.requirements << "system: groonga: debian: libgroonga-dev"
 
   spec.requirements << "system: groonga: rhel: repository: id: apache-arrow"
+  spec.requirements << "system: groonga: rhel: repository: name: Apache Arrow"
   spec.requirements << "system: groonga: rhel: repository: baseurl: https://apache.jfrog.io/artifactory/arrow/almalinux/$releasever/$basearch/"
   spec.requirements << "system: groonga: rhel: repository: gpgkey: https://downloads.apache.org/arrow/KEYS"
 
   spec.requirements << "system: groonga: rhel: repository: id: groonga"
+  spec.requirements << "system: groonga: rhel: repository: name: Groonga"
   spec.requirements << "system: groonga: rhel: repository: baseurl: https://packages.groonga.org/almalinux/$releasever/$basearch/"
   spec.requirements << "system: groonga: rhel: repository: gpgkey: https://packages.groonga.org/almalinux/groonga-release-keyring.asc"
 
