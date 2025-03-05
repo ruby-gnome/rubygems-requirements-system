@@ -38,6 +38,8 @@ Gem::Specification.new do |spec|
 
   spec.requirements << "system: groonga: debian: libgroonga-dev"
 
+  spec.requirements << "system: groonga: rhel: epel-release"
+
   spec.requirements << "system: groonga: rhel: repository: id: apache-arrow"
   spec.requirements << "system: groonga: rhel: repository: name: Apache Arrow"
   spec.requirements << "system: groonga: rhel: repository: baseurl: https://apache.jfrog.io/artifactory/arrow/almalinux/$releasever/$basearch/"
