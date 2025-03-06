@@ -36,6 +36,11 @@ Gem::Specification.new do |spec|
   spec.requirements << "system: groonga: debian: repository: uris: https://packages.groonga.org/%{distribution}/"
   spec.requirements << "system: groonga: debian: repository: signed-by: https://packages.groonga.org/%{distribution}/groonga-archive-keyring.asc"
 
+  spec.requirements << "system: groonga: ubuntu: repository: id: groonga"
+  spec.requirements << "system: groonga: ubuntu: repository: uris: https://packages.groonga.org/%{distribution}/"
+  spec.requirements << "system: groonga: ubuntu: repository: components: universe"
+  spec.requirements << "system: groonga: ubuntu: repository: signed-by: https://packages.groonga.org/%{distribution}/groonga-archive-keyring.asc"
+
   spec.requirements << "system: groonga: debian: libgroonga-dev"
 
   spec.requirements << "system: groonga: rhel: epel-release"
