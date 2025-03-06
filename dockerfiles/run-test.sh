@@ -130,9 +130,12 @@ for test_gem_path in "${test_gem_paths[@]}"; do
 
   group_begin "Test: ${gem_name}: Cleanup"
   if [ -d /etc/apt/sources.list.d.bak ]; then
+    sudo dnf remove -y groonga-apt-source || :
+    sudo dnf remove -y apache-arrow-apt-source || :
     sudo rm -rf /etc/apt/sources.list.d
     sudo mv /etc/apt/sources.list.d{.bak,}
     sudo apt purge -y -V libgroonga-dev || :
+    sudo apt purge -y -V libgroonga0 || :
   fi
   if [ -d /etc/yum.repos.d.bak ]; then
     sudo dnf remove -y groonga-release || :
