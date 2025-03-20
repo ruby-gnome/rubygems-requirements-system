@@ -17,6 +17,7 @@ FROM registry.gitlab.com/pld-linux/pld
 
 RUN \
   poldek --noask --update --upgrade \
+    coreutils \
     gcc \
     make \
     ruby \

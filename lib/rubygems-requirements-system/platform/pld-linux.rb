@@ -32,7 +32,7 @@ module RubyGemsRequirementsSystem
 
       private
       def install_command_line(package)
-        ["poldek", "--up", "-u", package]
+        ["poldek", "--noask", "--update", "--upgrade", package]
       end
 
       def need_super_user_priviledge?
