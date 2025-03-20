@@ -1,5 +1,11 @@
 # News
 
+## 0.0.5 - 2025-03-20
+
+### Improvements
+
+  * Improved Bundler integration.
+
 ## 0.0.4 - 2025-03-05
 
 ### Improvements
