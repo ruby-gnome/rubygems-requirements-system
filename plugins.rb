@@ -16,11 +16,11 @@
 Bundler::Plugin::API.hook(Bundler::Plugin::Events::GEM_BEFORE_INSTALL_ALL) do |dependencies|
   Gem.pre_install do |gem_installer|
     # We use RubyGems plugin for non Bundler.
-    next unless gem_installer.class == Gem::Installer
+    next if gem_installer.class == Gem::Installer
 
     require_relative "lib/rubygems-requirements-system/installer"
 
-    installer = RubyGemsRequirementsSystem::Installer.new(spec_installer.spec)
+    installer = RubyGemsRequirementsSystem::Installer.new(gem_installer.spec)
     installer.install
   end
 end
