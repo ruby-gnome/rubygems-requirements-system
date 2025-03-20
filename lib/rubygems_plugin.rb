@@ -13,9 +13,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative "rubygems-requirements-system/installer"
-
 Gem.pre_install do |gem_installer|
+  # We use Bundler plugin for Bundler.
+  next unless gem_installer.class == Gem::Installer
+
+  require_relative "rubygems-requirements-system/installer"
+
   installer = RubyGemsRequirementsSystem::Installer.new(gem_installer.spec)
   installer.install
 end

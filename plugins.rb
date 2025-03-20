@@ -13,5 +13,14 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Do nothing. We can use this as a Bundler plugin by this file. If we
-# use this as a Bundler plugin, Bundler install this before other gems.
+Bundler::Plugin::API.hook(Bundler::Plugin::Events::GEM_BEFORE_INSTALL_ALL) do |dependencies|
+  Gem.pre_install do |gem_installer|
+    # We use RubyGems plugin for non Bundler.
+    next unless gem_installer.class == Gem::Installer
+
+    require_relative "lib/rubygems-requirements-system/installer"
+
+    installer = RubyGemsRequirementsSystem::Installer.new(spec_installer.spec)
+    installer.install
+  end
+end
