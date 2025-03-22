@@ -1,5 +1,11 @@
 # News
 
+## 0.0.7 - 2025-03-22
+
+### Fixes
+
+  * pld-linux: Fixed a bug that interactive mode is used.
+
 ## 0.0.6 - 2025-03-20
 
 ### Fixes
