@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.requirements << "system: executable(dot): arch_linux: graphviz"
   spec.requirements << "system: executable(dot): conda: graphviz"
   spec.requirements << "system: executable(dot): debian: graphviz"
+  spec.requirements << "system: executable(dot): fedora: graphviz"
   spec.requirements << "system: executable(dot): gentoo_linux: media-gfx/graphviz"
   spec.requirements << "system: executable(dot): homebrew: graphviz"
   spec.requirements << "system: executable(dot): macports: graphviz"
