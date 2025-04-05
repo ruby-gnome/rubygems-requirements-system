@@ -52,7 +52,7 @@ module RubyGemsRequirementsSystem
         next if not_used_packages.empty?
         system_packages = @platform.default_system_packages(not_used_packages)
         next if system_packages.nil?
-        requirements[not_used_dependencies] = system_packages
+        requirements[not_used_deps] = system_packages
       end
       requirements.collect do |dependencies, system_packages|
         system_packages = detect_system_repositories(system_packages)
