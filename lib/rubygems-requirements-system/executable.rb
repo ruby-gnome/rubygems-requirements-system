@@ -13,25 +13,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require_relative "executable-finder"
+
 module RubyGemsRequirementsSystem
-  Package = Struct.new(:id, :operator, :required_version) do
+  Executable = Struct.new(:name) do
     def installed?
-      package_config = PKGConfig.package_config(id)
-      begin
-        package_config.cflags
-      rescue PackageConfig::NotFoundError
-        return false
-      end
-
-      satisfied?(package_config.version)
-    end
-
-    def satisfied?(target_version)
-      return true if required_version.nil?
-
-      target = Gem::Version.new(target_version)
-      required = Gem::Version.new(required_version)
-      target.__send__(operator, required)
+      ExecutableFinder.exist?(name)
     end
   end
 end

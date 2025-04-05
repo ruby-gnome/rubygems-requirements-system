@@ -13,65 +13,97 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require_relative "executable"
 require_relative "package"
 require_relative "requirement"
 require_relative "system-repository"
 
 module RubyGemsRequirementsSystem
   class RequirementsParser
-    def initialize(gemspec_requirements, platform)
+    def initialize(gemspec_requirements, platform, ui)
       @gemspec_requirements = gemspec_requirements
       @platform = platform
+      @ui = ui
     end
 
     def parse
-      all_packages_set = {}
+      all_dependencies_set = {}
       requirements = {}
       @gemspec_requirements.each do |gemspec_requirement|
         components = gemspec_requirement.split(/:\s*/, 4)
         next unless components.size == 4
 
-        id, raw_packages, platform, system_package = components
+        id, raw_dependencies, platform, system_package = components
         next unless id == "system"
 
-        packages = parse_packages(raw_packages)
-        next if packages.empty?
+        dependencies = parse_dependencies(raw_dependencies)
+        next if dependencies.empty?
 
-        all_packages_set[packages] = true
+        all_dependencies_set[dependencies] = true
 
         next unless @platform.target?(platform)
-        requirements[packages] ||= []
-        requirements[packages] << system_package
+        requirements[dependencies] ||= []
+        requirements[dependencies] << system_package
       end
-      (all_packages_set.keys - requirements.keys).each do |not_used_packages|
+      (all_dependencies_set.keys - requirements.keys).each do |not_used_deps|
+        not_used_packages = not_used_deps.select do |dependency|
+          dependency.is_a?(Package)
+        end
+        next if not_used_packages.empty?
         system_packages = @platform.default_system_packages(not_used_packages)
         next if system_packages.nil?
-        requirements[not_used_packages] = system_packages
+        requirements[not_used_dependencies] = system_packages
       end
-      requirements.collect do |packages, system_packages|
+      requirements.collect do |dependencies, system_packages|
         system_packages = detect_system_repositories(system_packages)
-        Requirement.new(packages, system_packages)
+        Requirement.new(dependencies, system_packages)
       end
     end
 
     private
-    def parse_packages(raw_packages)
-      packages = raw_packages.split(/\s*\|\s*/).collect do |raw_package|
-        Package.parse(raw_package)
+    def parse_dependencies(raw_dependencies)
+      dependencies = []
+      raw_dependencies.split(/\s*\|\s*/).each do |raw_dependency|
+        match_data = /\A([^(]+)\((.+)\)\z/.match(raw_dependency)
+        if match_data
+          type = match_data[1]
+          value = match_data[2]
+        else
+          type = "pkgconfig"
+          value = raw_dependency
+        end
+        dependency = parse_dependency(type, value, raw_dependency)
+        next if dependency.nil?
+        dependencies << dependency
       end
-      # Ignore this requirement if any invalid package is included.
-      # We must not report an error for this because
+      dependencies
+    end
+
+    def parse_dependency(type, value, raw_dependency)
+      # We must not report an error for invalid dependency because
       # Gem::Specification#requirements is a free form
       # configuration. So there are configuration values that use
-      # "system: ..." but not for this plugin. We can report a
-      # warning instead.
-      packages.each do |package|
-        unless package.valid?
-          # TODO: Report a warning
-          return []
+      # "system: ..." but not for this plugin. We can report a warning
+      # instead.
+      case type
+      when "executable"
+        Executable.new(value)
+      when "pkgconfig"
+        id, operator, required_version = value.split(/\s*(==|>=|>|<=|<)\s*/, 3)
+        if id.empty?
+          @ui.warn("Ignore invalid package: no ID: #{raw_dependency}")
+          return nil
         end
+        if operator and required_version.nil?
+          @ui.warn("Ignore invalid package: " +
+                   "no required version with operator: #{raw_dependency}")
+          return nil
+        end
+        Package.new(id, operator, required_version)
+      else
+        @ui.warn("Ignore unsupported type: #{type}: #{raw_dependency}")
+        nil
       end
-      packages
     end
 
     def detect_system_repositories(original_system_packages)

@@ -126,6 +126,9 @@ for test_gem_path in "${test_gem_paths[@]}"; do
   group_begin "Test: ${gem_name}: Default"
   # Must be succeeded
   gem install "${gem_install_options[@]}" ./*.gem
+  if [ "${gem_name}" = "dummy-graphviz" ]; then
+    ruby -e 'require "dummy-graphviz"'
+  fi
   group_end
 
   group_begin "Test: ${gem_name}: Cleanup"

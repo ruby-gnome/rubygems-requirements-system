@@ -13,8 +13,4 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require "rubygems/user_interaction"
-
-require_relative "../lib/rubygems-requirements-system/platform"
-require_relative "../lib/rubygems-requirements-system/requirements-parser"
-require_relative "../lib/rubygems-requirements-system/ui"
+system("dot", "-V") or raise "dot isn't available"

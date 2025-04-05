@@ -22,11 +22,11 @@ module RubyGemsRequirementsSystem
         PLATFORM_CLASSES << platform_class
       end
 
-      def detect
+      def detect(ui)
         PLATFORM_CLASSES.reverse_each do |platform_class|
-          return platform_class.new if platform_class.current_platform?
+          return platform_class.new(ui) if platform_class.current_platform?
         end
-        Unknown.new
+        Unknown.new(ui)
       end
     end
   end

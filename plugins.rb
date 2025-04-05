@@ -20,7 +20,8 @@ Bundler::Plugin::API.hook(Bundler::Plugin::Events::GEM_BEFORE_INSTALL_ALL) do |d
 
     require_relative "lib/rubygems-requirements-system/installer"
 
-    installer = RubyGemsRequirementsSystem::Installer.new(gem_installer.spec)
+    ui = Bundler.ui
+    installer = RubyGemsRequirementsSystem::Installer.new(gem_installer.spec, ui)
     installer.install
   end
 end

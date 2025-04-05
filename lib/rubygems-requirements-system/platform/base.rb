@@ -15,7 +15,6 @@
 
 require "fileutils"
 require "open-uri"
-require "rubygems/user_interaction"
 require "tempfile"
 
 require_relative "../executable-finder"
@@ -24,7 +23,9 @@ require_relative "../os-release"
 module RubyGemsRequirementsSystem
   module Platform
     class Base
-      include Gem::UserInteraction
+      def initialize(ui)
+        @ui = ui
+      end
 
       def target?(platform)
         raise NotImpelementedError
@@ -122,8 +123,8 @@ module RubyGemsRequirementsSystem
         else
           package_label = package
         end
-        prefix = "requirements: system: #{package_label}: #{action}"
-        say("#{prefix}: Start")
+        prefix = "#{package_label}: #{action}"
+        @ui.info("#{prefix}: Start")
         failed_to_get_super_user_priviledge = false
         if have_priviledge?
           succeeded = system(*command_line)
@@ -142,16 +143,16 @@ module RubyGemsRequirementsSystem
         else
           result_message = succeeded ? "succeeded" : "failed"
         end
-        say("#{prefix}: #{result_message}")
+        @ui.info("#{prefix}: #{result_message}")
 
         unless succeeded
           escaped_command_line = command_line.collect do |part|
-            Shellwords.escape(part)
+            Shellwobrds.escape(part)
           end
-          alert_warning("#{prefix}: Failed.")
-          alert_warning("Run the following command " +
-                        "to #{action} required system package: " +
-                        escaped_command_line.join(" "))
+          @ui.error("#{prefix}: Failed.")
+          @ui.error("Run the following command " +
+                    "to #{action} required system package: " +
+                    escaped_command_line.join(" "))
         end
         succeeded
       end

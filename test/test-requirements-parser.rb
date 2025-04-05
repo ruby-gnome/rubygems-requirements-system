@@ -16,18 +16,25 @@
 require_relative "helper"
 
 class TestRequiremtsParser < Test::Unit::TestCase
+  Executable = RubyGemsRequirementsSystem::Executable
   Package = RubyGemsRequirementsSystem::Package
   Platform = RubyGemsRequirementsSystem::Platform
   Requirement = RubyGemsRequirementsSystem::Requirement
   RequirementsParser = RubyGemsRequirementsSystem::RequirementsParser
   SystemRepository = RubyGemsRequirementsSystem::SystemRepository
+  UI = RubyGemsRequirementsSystem::UI
 
   def setup
-    @platform = Platform::Ubuntu.new
+    @ui = UI.new(Gem::SilentUI.new)
+    @platform = Platform::Ubuntu.new(@ui)
+  end
+
+  def parser(gemspec_requirements)
+    RequirementsParser.new(gemspec_requirements, @platform, @ui)
   end
 
   def parse(gemspec_requirements)
-    RequirementsParser.new(gemspec_requirements, @platform).parse
+    parser(gemspec_requirements).parse
   end
 
   def test_minimal
@@ -39,6 +46,22 @@ class TestRequiremtsParser < Test::Unit::TestCase
                                    ["libcairo2-dev"]),
                  ],
                  parse(gemspec_requirements))
+  end
+
+  def test_executable
+    assert_equal([
+                   Requirement.new([Executable.new("dot")],
+                                   ["graphviz"]),
+                 ],
+                 parse(["system: executable(dot): debian: graphviz"]))
+  end
+
+  def test_pkgconfig
+    assert_equal([
+                   Requirement.new([Package.new("cairo")],
+                                   ["libcairo2-dev"]),
+                 ],
+                 parse(["system: pkgconfig(cairo): debian: libcairo2-dev"]))
   end
 
   def test_required_version
@@ -160,5 +183,58 @@ class TestRequiremtsParser < Test::Unit::TestCase
                                    ]),
                  ],
                  parse(gemspec_requirements))
+  end
+
+  sub_test_case("#parse_dependency") do
+    def parse_dependency(type, value, raw_dependency)
+      parser([]).__send__(:parse_dependency, type, value, raw_dependency)
+    end
+
+    sub_test_case("pkgconfig") do
+      def parse_dependency(value)
+        super("pkgconfig", value, value)
+      end
+
+      def test_id
+        assert_equal(Package.new("cairo"),
+                     parse_dependency("cairo"))
+      end
+
+      def test_operator_equal
+        assert_equal(Package.new("cairo", "==", "1.0"),
+                     parse_dependency("cairo == 1.0"))
+      end
+
+      def test_operator_greater_than_equal
+        assert_equal(Package.new("cairo", ">=", "1.0"),
+                     parse_dependency("cairo >= 1.0"))
+      end
+
+      def test_operator_greater_than
+        assert_equal(Package.new("cairo", ">", "1.0"),
+                     parse_dependency("cairo > 1.0"))
+      end
+
+      def test_operator_less_than_equal
+        assert_equal(Package.new("cairo", "<=", "1.0"),
+                     parse_dependency("cairo <= 1.0"))
+      end
+
+      def test_operator_less_than
+        assert_equal(Package.new("cairo", "<", "1.0"),
+                     parse_dependency("cairo < 1.0"))
+      end
+    end
+
+    sub_test_case("executable") do
+      def parse_dependency(value)
+        super("executable", value, value)
+      end
+
+      def test_name
+        assert_equal(Executable.new("dot"),
+                     parse_dependency("dot"))
+      end
+    end
   end
 end

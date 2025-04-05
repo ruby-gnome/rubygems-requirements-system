@@ -19,6 +19,7 @@ require_relative "version"
 
 require_relative "platform"
 require_relative "requirements-parser"
+require_relative "ui"
 
 module RubyGemsRequirementsSystem
   pkg_config_rb = File.join(__dir__, "pkg-config.rb")
@@ -31,17 +32,16 @@ module RubyGemsRequirementsSystem
   end
 
   class Installer
-    include Gem::UserInteraction
-
-    def initialize(gemspec)
+    def initialize(gemspec, ui)
       @gemspec = gemspec
-      @platform = Platform.detect
+      @ui = UI.new(ui)
+      @platform = Platform.detect(@ui)
     end
 
     def install
       return true unless enabled?
 
-      parser = RequirementsParser.new(@gemspec.requirements, @platform)
+      parser = RequirementsParser.new(@gemspec.requirements, @platform, @ui)
       requirements = parser.parse
       requirements.all? do |requirement|
         next true if requirement.satisfied?

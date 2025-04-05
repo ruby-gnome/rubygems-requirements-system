@@ -19,6 +19,7 @@ Gem.pre_install do |gem_installer|
 
   require_relative "rubygems-requirements-system/installer"
 
-  installer = RubyGemsRequirementsSystem::Installer.new(gem_installer.spec)
+  ui = Gem.ui
+  installer = RubyGemsRequirementsSystem::Installer.new(gem_installer.spec, ui)
   installer.install
 end

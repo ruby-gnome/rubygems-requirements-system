@@ -14,23 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module RubyGemsRequirementsSystem
-  Requirement = Struct.new(:packages, :system_packages) do
+  Requirement = Struct.new(:dependencies, :system_packages) do
     def satisfied?
-      packages.any? do |package|
-        installed?(package)
+      dependencies.any? do |dependency|
+        dependency.installed?
       end
-    end
-
-    private
-    def installed?(package)
-      package_config = PKGConfig.package_config(package.id)
-      begin
-        package_config.cflags
-      rescue PackageConfig::NotFoundError
-        return false
-      end
-
-      package.satisfied?(package_config.version)
     end
   end
 end

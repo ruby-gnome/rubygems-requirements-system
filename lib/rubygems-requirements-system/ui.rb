@@ -14,24 +14,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module RubyGemsRequirementsSystem
-  Package = Struct.new(:id, :operator, :required_version) do
-    def installed?
-      package_config = PKGConfig.package_config(id)
-      begin
-        package_config.cflags
-      rescue PackageConfig::NotFoundError
-        return false
-      end
-
-      satisfied?(package_config.version)
+  class UI
+    def initialize(ui)
+      @ui = ui
     end
 
-    def satisfied?(target_version)
-      return true if required_version.nil?
+    def debug(message)
+      log(:debug, message)
+    end
 
-      target = Gem::Version.new(target_version)
-      required = Gem::Version.new(required_version)
-      target.__send__(operator, required)
+    def info(message)
+      log(:info, message)
+    end
+
+    def warn(message)
+      log(:warn, message)
+    end
+
+    private
+    def log(level, message)
+      message = "requirements: system: #{message}"
+      if @ui.respond_to?(level)
+        @ui.__send__(level, message)
+      else
+        @ui.say(message)
+      end
     end
   end
 end
