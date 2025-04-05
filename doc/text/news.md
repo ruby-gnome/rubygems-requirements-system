@@ -1,5 +1,11 @@
 # News
 
+## 0.0.8 - 2025-04-05
+
+### Improvements
+
+  * Added support for an executable as a dependency.
+
 ## 0.0.7 - 2025-03-22
 
 ### Fixes
