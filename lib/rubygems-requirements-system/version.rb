@@ -14,5 +14,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module RubyGemsRequirementsSystem
-  VERSION = "0.0.8"
+  VERSION = "0.0.9"
 end
