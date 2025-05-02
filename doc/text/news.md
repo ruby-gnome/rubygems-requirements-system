@@ -1,5 +1,11 @@
 # News
 
+## 0.0.9 - 2025-05-02
+
+### Fixes
+
+  * Fixed a typo.
+
 ## 0.0.8 - 2025-04-05
 
 ### Improvements
