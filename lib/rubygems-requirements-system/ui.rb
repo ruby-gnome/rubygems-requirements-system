@@ -31,14 +31,29 @@ module RubyGemsRequirementsSystem
       log(:warn, message)
     end
 
+    def error(message)
+      log(:error, message)
+    end
+
     private
     def log(level, message)
       message = "requirements: system: #{message}"
-      if @ui.respond_to?(level)
-        @ui.__send__(level, message)
-      else
-        @ui.say(message)
+      candidates = [level]
+      case level
+      when :info
+        candidates << :alert # For Gem::UserInteraction
+      when :warn
+        candidates << :alert_warning # For Gem::UserInteraction
+      when :error
+        candidates << :alert_error # For Gem::UserInteraction
       end
+      candidates.each do |candidate|
+        if @ui.respond_to?(candidate)
+          @ui.__send__(candidate, message)
+          return
+        end
+      end
+      @ui.say(message) # fallback
     end
   end
 end
