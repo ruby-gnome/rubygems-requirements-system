@@ -1,5 +1,11 @@
 # News
 
+## 0.1.0 - 2025-05-02
+
+### Fixes
+
+  * Fixed a bug that error log isn't reported.
+
 ## 0.0.9 - 2025-05-02
 
 ### Fixes
