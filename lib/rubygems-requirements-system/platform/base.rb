@@ -147,7 +147,7 @@ module RubyGemsRequirementsSystem
 
         unless succeeded
           escaped_command_line = command_line.collect do |part|
-            Shellwobrds.escape(part)
+            Shellwords.escape(part)
           end
           @ui.error("#{prefix}: Failed.")
           @ui.error("Run the following command " +
