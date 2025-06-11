@@ -22,6 +22,7 @@ module RubyGemsRequirementsSystem
 
       class << self
         def current_platform?
+          return false if Object.const_defined?(:RubyInstaller)
           ExecutableFinder.exist?("pacman")
         end
       end
