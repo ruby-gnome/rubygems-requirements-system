@@ -1,5 +1,11 @@
 # News
 
+## 0.1.1 - 2025-06-11
+
+### Fixes
+
+  * arch-linux: Fixed a bug that MSYS2 is also detected.
+
 ## 0.1.0 - 2025-05-02
 
 ### Fixes
