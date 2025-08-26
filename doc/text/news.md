@@ -1,5 +1,11 @@
 # News
 
+## 0.1.2 - 2025-08-27
+
+### Improvements
+
+  * Updated bundled `pkg-config` gem to 1.6.3.
+
 ## 0.1.1 - 2025-06-11
 
 ### Fixes
