@@ -19,7 +19,7 @@ require "rbconfig"
 require "shellwords"
 
 module PKGConfig
-  VERSION = "1.6.0"
+  VERSION = "1.6.3"
 
   @@paths = []
   @@override_variables = {}
@@ -340,21 +340,34 @@ class PackageConfig
         if brew
           homebrew_repository = run_command("brew", "--repository")
           if homebrew_repository
-          homebrew_repository_candidates <<
-            Pathname(homebrew_repository.to_s)
+            homebrew_repository_candidates <<
+              Pathname(homebrew_repository.strip)
+          end
+          homebrew_prefix = run_command("brew", "--prefix")
+          if homebrew_prefix
+            homebrew_repository_candidates <<
+              Pathname(homebrew_prefix.strip)
           end
         end
         homebrew_repository_candidates.uniq.each do |candidate|
-          pkgconfig_base_path = candidate + "Library/Homebrew/os/mac/pkgconfig"
-          path = pkgconfig_base_path + mac_os_version
-          unless path.exist?
-            path = pkgconfig_base_path + mac_os_version.gsub(/\.\d+\z/, "")
+          mac_pkgconfig_base_path =
+            candidate + "Library/Homebrew/os/mac/pkgconfig"
+          mac_pkgconfig_path = mac_pkgconfig_base_path + mac_os_version
+          unless mac_pkgconfig_path.exist?
+            mac_pkgconfig_path =
+              mac_pkgconfig_base_path + mac_os_version.gsub(/\.\d+\z/, "")
           end
-          paths << path.to_s if path.exist?
+          paths << mac_pkgconfig_path.to_s if mac_pkgconfig_path.exist?
+
+          pkgconfig_path = candidate + "lib/pkgconfig"
+          paths << pkgconfig_path.to_s if pkgconfig_path.exist?
         end
       end
       paths.concat(default_paths)
-      paths.join(SEPARATOR)
+      [
+        with_config("pkg-config-path") || ENV["PKG_CONFIG_PATH"],
+        *paths,
+      ].compact.join(SEPARATOR)
     end
 
     def run_command(*command_line)
@@ -388,8 +401,10 @@ class PackageConfig
       @name = name
     end
     @options = options
-    path = @options[:path] || ENV["PKG_CONFIG_PATH"]
-    @paths = [path, self.class.default_path].compact.join(SEPARATOR).split(SEPARATOR)
+    @paths = [
+      @options[:path],
+      self.class.default_path,
+    ].compact.join(SEPARATOR).split(SEPARATOR)
     @paths.unshift(*(@options[:paths] || []))
     @paths = normalize_paths(@paths)
     @msvc_syntax = @options[:msvc_syntax]
