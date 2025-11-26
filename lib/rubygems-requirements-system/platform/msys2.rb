@@ -43,18 +43,7 @@ module RubyGemsRequirementsSystem
         end
 
         def package_prefix
-          case RUBY_PLATFORM
-          when "i386-mingw32"
-            "mingw-w64-i686-"
-          when "x64-mingw32"
-            "mingw-w64-x86_64-"
-          when "x64-mingw-ucrt"
-            "mingw-w64-ucrt-x86_64-"
-          when "aarch64-mingw-ucrt"
-            "mingw-w64-clang-aarch64-"
-          else
-            nil
-          end
+          ENV["MINGW_PACKAGE_PREFIX"]
         end
       end
 
@@ -66,14 +55,14 @@ module RubyGemsRequirementsSystem
         prefix = self.class.package_prefix
         return if prefix.nil?
         packages.collect do |package|
-          "#{prefix}#{package.id}"
+          "#{prefix}-#{package.id}"
         end
       end
 
       private
       def install_command_line(package)
         ensure_pacman_in_path
-        package = "#{self.class.package_prefix}#{package}"
+        package = "#{self.class.package_prefix}-#{package}"
         ["pacman", "-S", "--noconfirm", package]
       end
 
