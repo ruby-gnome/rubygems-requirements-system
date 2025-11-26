@@ -62,6 +62,10 @@ require_relative "platform/suse"
 require_relative "platform/alpine-linux"
 
 
+# Windows
+require_relative "platform/msys2"
+
+
 # Platform independent
 require_relative "platform/homebrew"
 require_relative "platform/conda"
