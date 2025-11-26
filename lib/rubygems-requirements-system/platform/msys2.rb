@@ -36,14 +36,6 @@ module RubyGemsRequirementsSystem
         platform == "msys2"
       end
 
-      def default_system_packages(packages)
-        prefix = self.class.package_prefix
-        return if prefix.nil?
-        packages.collect do |package|
-          "#{prefix}-#{package.id}"
-        end
-      end
-
       private
       def install_command_line(package)
         ensure_pacman_in_path
