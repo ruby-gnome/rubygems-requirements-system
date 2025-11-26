@@ -117,9 +117,9 @@ jobs:
           msystem: ${{ matrix.msystem }}
           update: true
           install: >-
-            ${{ matrix.package-prefix }}-toolchain
-            ${{ matrix.package-prefix }}-ruby
             base-devel
+            ${{ matrix.package-prefix }}-ruby
+            ${{ matrix.package-prefix }}-toolchain
       - name: Install
         shell: msys2 {0}
         run: |
