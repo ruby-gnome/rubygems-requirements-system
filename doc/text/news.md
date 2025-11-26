@@ -1,5 +1,20 @@
 # News
 
+## 0.1.4 - 2025-11-26
+
+### Improvements
+
+  * Added support for Ruby installed by MSYS2. Note that this is not
+    for Ruby installed by RubyInstaller. Ruby installed by
+    RubyInstaller must use `msys2_mingw_dependencies` gemspec metadata
+    instead of this.
+    * GH-16
+    * Patch by takuya kodama
+
+### Thanks
+
+  * takuya kodama
+
 ## 0.1.3 - 2025-09-03
 
 ### Improvements
