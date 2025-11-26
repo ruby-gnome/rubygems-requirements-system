@@ -38,21 +38,16 @@ module RubyGemsRequirementsSystem
 
       private
       def install_command_line(package)
-        ensure_pacman_in_path
-        package = "#{self.class.package_prefix}-#{package}"
-        ["pacman", "-S", "--noconfirm", package]
+        [
+          "pacman",
+          "-S",
+          "--noconfirm",
+          "#{self.class.package_prefix}-#{package}"
+        ]
       end
 
       def need_super_user_priviledge?
         false
-      end
-
-      def ensure_pacman_in_path
-        pacman_path = self.class.pacman_path
-        return if pacman_path.nil?
-        pacman_dir = File.dirname(pacman_path)
-        return if ENV["PATH"].split(File::PATH_SEPARATOR).include?(pacman_dir)
-        ENV["PATH"] = [pacman_dir, ENV["PATH"]].join(File::PATH_SEPARATOR)
       end
     end
   end
