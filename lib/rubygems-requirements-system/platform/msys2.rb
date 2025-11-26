@@ -24,22 +24,7 @@ module RubyGemsRequirementsSystem
         def current_platform?
           return false if Object.const_defined?(:RubyInstaller)
           return false if package_prefix.nil?
-          not pacman_path.nil?
-        end
-
-        def pacman_path
-          finder = ExecutableFinder.new("pacman")
-          case RUBY_PLATFORM
-          when "i386-mingw32"
-            Dir.glob("c:/msys{64,32,*}/usr/bin").each do |bin|
-              finder.append_path(bin)
-            end
-          when "x64-mingw32", "x64-mingw-ucrt", "aarch64-mingw-ucrt"
-            Dir.glob("c:/msys{64,*}/usr/bin").each do |bin|
-              finder.append_path(bin)
-            end
-          end
-          finder.find
+          ExecutableFinder.exist?("pacman")
         end
 
         def package_prefix
