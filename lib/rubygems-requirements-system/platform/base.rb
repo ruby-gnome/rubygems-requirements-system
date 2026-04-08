@@ -45,7 +45,7 @@ module RubyGemsRequirementsSystem
 
       def install(requirement)
         synchronize do
-          requirement.system_packages.any? do |package|
+          requirement.system_packages.all? do |package|
             install_package(package) and requirement.satisfied?
           end
         end
