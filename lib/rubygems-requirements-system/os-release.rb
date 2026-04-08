@@ -59,6 +59,8 @@ module RubyGemsRequirementsSystem
         next if value.nil?
         if value.start_with?("\"") and value.end_with?("\"")
           value = value[1..-2]
+        elsif value.start_with?("'") and value.end_with?("'")
+          value = value[1..-2]
         end
         @variables[key] = value
       end
