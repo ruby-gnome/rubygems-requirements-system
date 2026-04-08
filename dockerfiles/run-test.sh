@@ -126,6 +126,20 @@ for test_gem_path in "${test_gem_paths[@]}"; do
   group_begin "Test: ${gem_name}: Default"
   # Must be succeeded
   gem install "${gem_install_options[@]}" ./*.gem
+  if [ "${gem_name}" = "dummy-cairo" ]; then
+    if [ -n "${CONDA_PREFIX:-}" ]; then
+      conda list cairo
+      conda list expat
+      conda list xorg-kbproto
+      conda list xorg-libxau
+      conda list xorg-libxext
+      conda list xorg-libxrender
+      conda list xorg-renderproto
+      conda list xorg-xextproto
+      conda list xorg-xproto
+      conda list zlib
+    fi
+  fi
   if [ "${gem_name}" = "dummy-graphviz" ]; then
     ruby -e 'require "dummy-graphviz"'
   fi
