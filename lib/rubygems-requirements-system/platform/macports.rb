@@ -32,7 +32,7 @@ module RubyGemsRequirementsSystem
 
       private
       def install_command_line(package)
-        ["port", "install", "-y", package]
+        ["port", "install", "-N", package]
       end
 
       def need_super_user_priviledge?
