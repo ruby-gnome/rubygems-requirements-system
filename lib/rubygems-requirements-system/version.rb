@@ -1,4 +1,4 @@
-# Copyright (C) 2025  Ruby-GNOME Project Team
+# Copyright (C) 2025-2026  Ruby-GNOME Project Team
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -14,5 +14,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module RubyGemsRequirementsSystem
-  VERSION = "0.1.6"
+  VERSION = "0.1.7"
 end
