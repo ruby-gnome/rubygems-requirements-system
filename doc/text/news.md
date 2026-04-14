@@ -1,5 +1,22 @@
 # News
 
+## 0.1.6 - 2026-04-14
+
+### Improvements
+
+  * Added support for quoting a value by single quote in
+    `/etc/os-release` such as Gentoo Linux.
+
+### Fixes
+
+  * Fixed wrong `port` option for MacPorts.
+    * GH-20
+    * Patch by KITAITI Makoto
+
+### Thanks
+
+  * KITAITI Makoto
+
 ## 0.1.5 - 2025-12-01
 
 ### Improvements
