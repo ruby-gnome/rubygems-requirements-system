@@ -1,5 +1,11 @@
 # News
 
+## 0.1.7 - 2026-06-15
+
+### Improvements
+
+  * conda: Add support for `CONDA_EXE`.
+
 ## 0.1.6 - 2026-04-14
 
 ### Improvements
