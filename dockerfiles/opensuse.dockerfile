@@ -1,4 +1,4 @@
-# Copyright (C) 2025  Ruby-GNOME Project Team
+# Copyright (C) 2025-2026  Ruby-GNOME Project Team
 #
 # This library is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -19,9 +19,7 @@ RUN \
   zypper --non-interactive install \
     gcc \
     make \
-    ruby2.5-devel \
-    ruby2.5-rubygem-bundler \
-    ruby2.5-rubygem-rake \
+    ruby-devel \
     sudo \
     which
 
