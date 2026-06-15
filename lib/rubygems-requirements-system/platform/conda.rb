@@ -1,4 +1,4 @@
-# Copyright (C) 2023-2025  Ruby-GNOME Project Team
+# Copyright (C) 2023-2026  Ruby-GNOME Project Team
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -22,7 +22,8 @@ module RubyGemsRequirementsSystem
 
       class << self
         def current_platform?
-          ENV["CONDA_PREFIX"] && ExecutableFinder.exist?("conda")
+          File.executable?(ENV["CONDA_EXE"] || "/nonexistent") or
+            (ENV["CONDA_PREFIX"] and ExecutableFinder.exist?("conda"))
         end
       end
 
@@ -32,7 +33,8 @@ module RubyGemsRequirementsSystem
 
       private
       def install_command_line(package)
-        ["conda", "install", "-c", "conda-forge", "-y", package]
+        conda = ENV["CONDA_EXE"] || "conda"
+        [conda, "install", "-c", "conda-forge", "-y", package]
       end
 
       def need_super_user_priviledge?

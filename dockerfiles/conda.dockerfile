@@ -1,4 +1,4 @@
-# Copyright (C) 2025  Ruby-GNOME Project Team
+# Copyright (C) 2025-2026  Ruby-GNOME Project Team
 #
 # This library is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -13,9 +13,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM continuumio/miniconda3
+FROM anaconda/miniconda
 
 RUN \
+  conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
+  conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r && \
   conda install -c conda-forge -y --quiet \
     compilers \
     make \
