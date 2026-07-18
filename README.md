@@ -385,6 +385,26 @@ explicitly:
      enabled: false
    ```
 
+### Force
+
+You may want to use a specified platform even when
+rubygems-requirements-system gem detects your platform
+automatically. For example, you may want to use conda even when you
+have Homebrew. You can specify a platform you want to use explicitly:
+
+1. Set the `RUBYGEMS_REQUIREMENTS_SYSTEM_PLATFORM` environment:
+
+   ```bash
+   RUBYGEMS_REQUIREMENTS_SYSTEM_PLATFORM=conda
+   ```
+
+2. Add the following configuration to `~/.gemrc`:
+
+   ```yaml
+   requirements_system:
+     platform: conda
+   ```
+
 ## History
 
 This is based on

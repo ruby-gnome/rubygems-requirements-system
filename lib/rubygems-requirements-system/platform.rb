@@ -1,4 +1,4 @@
-# Copyright (C) 2017-2025  Ruby-GNOME Project Team
+# Copyright (C) 2017-2026  Ruby-GNOME Project Team
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -23,8 +23,15 @@ module RubyGemsRequirementsSystem
       end
 
       def detect(ui)
+        platform_name =
+          ENV["RUBYGEMS_REQUIREMENTS_SYSTEM_PLATFORM"] ||
+          (Gem.configuration["requirements_system"] || {})["platform"]
         PLATFORM_CLASSES.reverse_each do |platform_class|
-          return platform_class.new(ui) if platform_class.current_platform?
+          next unless platform_class.current_platform?
+
+          platform = platform_class.new(ui)
+          return platform if platform_name.nil?
+          return platform if platform.target?(platform_name)
         end
         Unknown.new(ui)
       end
