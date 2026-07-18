@@ -1,5 +1,13 @@
 # News
 
+## 0.1.8 - 2026-07-18
+
+### Improvements
+
+  * Add support for specifying the target platform explicitly. Use the
+    `RUBYGEMS_REQUIREMENTS_SYSTEM_PLATFORM` environment variable or
+    `requirements_system.platform` in `~/.gemrc`.
+
 ## 0.1.7 - 2026-06-15
 
 ### Improvements
