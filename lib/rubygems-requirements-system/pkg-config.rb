@@ -288,11 +288,6 @@ class PackageConfig
           default_paths << (pkg_config_prefix + "libdata/pkgconfig").to_s
           default_paths << (pkg_config_prefix + "share/pkgconfig").to_s
         end
-        conda_prefix = ENV["CONDA_PREFIX"]
-        if conda_prefix
-          default_paths << File.join(conda_prefix, "lib", "pkgconfig")
-          default_paths << File.join(conda_prefix, "share", "pkgconfig")
-        end
         default_paths << "/usr/local/lib64/pkgconfig"
         default_paths << "/usr/local/libx32/pkgconfig"
         default_paths << "/usr/local/lib/pkgconfig"
@@ -363,6 +358,19 @@ class PackageConfig
           paths << pkgconfig_path.to_s if pkgconfig_path.exist?
         end
       end
+      conda_prefixes = []
+      conda_prefixes << ENV["CONDA_PREFIX"] if ENV["CONDA_PREFIX"]
+      if ENV["CONDA_EXE"]
+        conda_base = File.dirname(File.dirname(ENV["CONDA_EXE"]))
+        conda_prefixes << conda_base
+      end
+      conda_prefixes.uniq.each do |prefix|
+        lib_pkgconfig = File.join(prefix, "lib", "pkgconfig")
+        share_pkgconfig = File.join(prefix, "share", "pkgconfig")
+        paths << lib_pkgconfig if File.directory?(lib_pkgconfig)
+        paths << share_pkgconfig if File.directory?(share_pkgconfig)
+      end
+
       paths.concat(default_paths)
       [
         with_config("pkg-config-path") || ENV["PKG_CONFIG_PATH"],
