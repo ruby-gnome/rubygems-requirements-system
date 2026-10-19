@@ -17,6 +17,7 @@ FROM registry.gitlab.com/pld-linux/pld
 
 RUN \
   poldek --noask --update --upgrade \
+    ca-certificates \
     coreutils \
     gcc \
     make \
