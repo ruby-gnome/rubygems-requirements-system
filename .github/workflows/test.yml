@@ -110,9 +110,6 @@ jobs:
           - msystem: CLANGARM64
             package-prefix: mingw-w64-clang-aarch64
             runner: windows-11-arm
-          - msystem: MINGW32
-            package-prefix: mingw-w64-i686
-            runner: windows-latest
           - msystem: MINGW64
             package-prefix: mingw-w64-x86_64
             runner: windows-latest
