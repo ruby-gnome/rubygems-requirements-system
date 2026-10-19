@@ -19,7 +19,7 @@ require "rbconfig"
 require "shellwords"
 
 module PKGConfig
-  VERSION = "1.6.5"
+  VERSION = "1.6.6"
 
   @@paths = []
   @@override_variables = {}
@@ -34,7 +34,8 @@ module PKGConfig
   end
 
   def msvc?
-    /mswin/.match(RUBY_PLATFORM) and /^cl\b/.match(RbConfig::CONFIG["CC"])
+    /mswin/.match(RUBY_PLATFORM) and
+      /\A(?:clang-)?cl\b/.match(RbConfig::CONFIG["CC"])
   end
 
   def package_config(package)
