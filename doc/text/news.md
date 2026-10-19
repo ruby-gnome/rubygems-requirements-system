@@ -1,10 +1,16 @@
 # News
 
+## 0.1.9 - 2026-10-19
+
+### Improvements
+
+  * Added support for clang-cl.
+
 ## 0.1.8 - 2026-07-18
 
 ### Improvements
 
-  * Add support for specifying the target platform explicitly. Use the
+  * Added support for specifying the target platform explicitly. Use the
     `RUBYGEMS_REQUIREMENTS_SYSTEM_PLATFORM` environment variable or
     `requirements_system.platform` in `~/.gemrc`.
 
@@ -12,7 +18,7 @@
 
 ### Improvements
 
-  * conda: Add support for `CONDA_EXE`.
+  * conda: Added support for `CONDA_EXE`.
 
 ## 0.1.6 - 2026-04-14
 
