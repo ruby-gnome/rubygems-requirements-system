@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2025  Sutou Kouhei <kou@cozmixng.org>
+# Copyright (C) 2008-2026  Sutou Kouhei <kou@cozmixng.org>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@ require "rbconfig"
 require "shellwords"
 
 module PKGConfig
-  VERSION = "1.6.6"
+  VERSION = "1.6.7"
 
   @@paths = []
   @@override_variables = {}
@@ -187,8 +187,6 @@ class PackageConfig
       candidates = [
         with_config("pkg-config"),
         ENV["PKG_CONFIG"],
-        "pkgconf#{exeext}",
-        "pkg-config#{exeext}",
       ].compact
       candidates.each do |pkg_config|
         pkg_config = Pathname.new(pkg_config)
@@ -202,13 +200,19 @@ class PackageConfig
           return found_pkg_config if found_pkg_config
         end
       end
-      Pathname.new(candidates[0])
+      # Search both names in each PATH entry to respect PATH order.
+      default_candidates = ["pkgconf#{exeext}", "pkg-config#{exeext}"]
+      found_pkg_config = search_executable_from_path(*default_candidates)
+      return found_pkg_config if found_pkg_config
+      Pathname.new(candidates[0] || default_candidates[0])
     end
 
-    def search_executable_from_path(name)
+    def search_executable_from_path(*names)
       (ENV["PATH"] || "").split(SEPARATOR).each do |path|
-        try_name = Pathname(path) + name
-        return try_name if try_name.executable?
+        names.each do |name|
+          try_name = Pathname(path) + name
+          return try_name if try_name.executable?
+        end
       end
       nil
     end
