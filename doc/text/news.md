@@ -1,5 +1,11 @@
 # News
 
+## 0.2.0 - 2026-11-04
+
+### Improvements
+
+  * Improved `pkgconf`/`pkg-config` search algorithm.
+
 ## 0.1.9 - 2026-10-19
 
 ### Improvements
